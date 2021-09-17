@@ -1,15 +1,15 @@
 import {
-    
+    MARKET_DATA
   } from "./Action";
        
   const initialState = {
-    // isLogged:false
+    marketData:null
   };
        
   const Reducer = (state = initialState, action) => {
     switch (action.type) {
-    //   case IS_LOGGED:
-        // return {...state , isLogged:action.payload}
+      case MARKET_DATA:
+        return {...state , marketData:action.payload}
       default:
     return state;
     }

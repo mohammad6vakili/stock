@@ -1,11 +1,11 @@
-// export const IS_LOGGED="IS_LOGGED";
+export const MARKET_DATA="MARKET_DATA";
 
 
-// export const setIsLogged=(is)=>{
-    // return(
-        // {
-            // type:IS_LOGGED,
-            // payload:is
-        // }
-    // )
-// }
+export const setMarketData=(data)=>{
+    return(
+        {
+            type:MARKET_DATA,
+            payload:data
+        }
+    )
+}
