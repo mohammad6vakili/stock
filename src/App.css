@@ -2,8 +2,25 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  direction: rtl;
 }
 .app {
   width: 100%;
   min-height: 100vh;
+}
+.ag-header{
+  height: 35px !important;
+  min-height: 35px !important;
+}
+.ag-header-row{
+  height: 100% !important;
+}
+.ag-header-cell-text,.ag-cell-value{
+  font-size: 11px;
+}
+.ag-header-cell{
+  padding: 0 5px !important;
+}
+.ag-cell{
+  padding: 0 5px !important;
 }
