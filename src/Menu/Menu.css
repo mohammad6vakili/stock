@@ -20,7 +20,7 @@
     justify-self: center;
 }
 .header-menu>div{
-    min-width: 30px;
+    width: 30px;
     height: 100%;
     padding:5px;
     border-radius: 8px;
@@ -28,7 +28,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-left: 10px;
 }
 .header-menu>div:hover{
     background-color: rgba(216, 216, 216, 0.671);
+}
+.header-menu>div>img{
+    width: 100%;
 }

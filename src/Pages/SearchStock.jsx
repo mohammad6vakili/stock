@@ -2,12 +2,14 @@ import React,{useState} from 'react';
 import "./SearchStock.css";
 import { Modal , Input } from 'antd';
 import { useSelector } from 'react-redux';
+import { setStockData } from '../Store/Action';
 import { useDispatch } from 'react-redux';
-import {setMarketData} from "../Store/Action";
+import { useHistory } from 'react-router';
 
 
 const SearchStock=({isModalVisible , handleCancel , handleOk})=>{
     const dispatch=useDispatch();
+    const history=useHistory();
     const [filteredData , setFilteredData]=useState(null);
     const marketData=useSelector(state=>state.Reducer.marketData);
 
@@ -20,6 +22,11 @@ const SearchStock=({isModalVisible , handleCancel , handleOk})=>{
                     item.Namad.includes(e.target.value.replace(/ی/g, 'ي'))
                 ))
             }
+    }
+
+    const goToStockPanel=(data)=>{
+        dispatch(setStockData(data));
+        history.push("/stock-panel");
     }
 
     return(
@@ -39,7 +46,7 @@ const SearchStock=({isModalVisible , handleCancel , handleOk})=>{
                 />
                 <div className="search-result-show">
                     {filteredData && filteredData.map((data,index)=>(
-                        <div className="search-result-show-item" key={index}>
+                        <div onClick={()=>goToStockPanel(data)} className="search-result-show-item" key={index}>
                             {data.Namad}
                         </div>
                     ))}

@@ -1,0 +1,21 @@
+.stock-panel-wrapper{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+}
+.stock-panel{
+    width: 90%;
+    height: 80vh;
+    border: 1px solid gray;
+    border-radius: 6px;
+}
+.stock-panel-header{
+    width: 100%;
+    padding: 10px;
+    background-color: rgba(211, 211, 211, 0.363);
+    color: black;
+    font-weight: 700;
+}
