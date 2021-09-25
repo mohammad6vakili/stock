@@ -32,6 +32,7 @@ const Header=()=>{
                 isModalVisible={isModalVisible} 
                 handleOk={handleOk}
                 handleCancel={handleCancel}
+                setIsModalVisible={setIsModalVisible}
             />
         </div>
     )

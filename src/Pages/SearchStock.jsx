@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
 
-const SearchStock=({isModalVisible , handleCancel , handleOk})=>{
+const SearchStock=({isModalVisible , handleCancel , handleOk , setIsModalVisible})=>{
     const dispatch=useDispatch();
     const history=useHistory();
     const [filteredData , setFilteredData]=useState(null);
@@ -27,6 +27,7 @@ const SearchStock=({isModalVisible , handleCancel , handleOk})=>{
     const goToStockPanel=(data)=>{
         dispatch(setStockData(data));
         history.push("/stock-panel");
+        setIsModalVisible(false);
     }
 
     return(
