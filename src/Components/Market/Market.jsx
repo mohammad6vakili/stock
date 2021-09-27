@@ -5,9 +5,9 @@ import Env from "../../Constant/Env.json";
 import {AgGridColumn, AgGridReact} from 'ag-grid-react';
 import { useDispatch , useSelector} from 'react-redux';
 import { setMarketData , setSidePanel, setStockData} from '../../Store/Action';
-import { Spin , Button} from 'antd';
+import { Spin } from 'antd';
 import { useHistory } from 'react-router';
-
+import { toast } from 'react-toastify';
 
 
 const MarketTablo=()=>{
@@ -23,8 +23,10 @@ const MarketTablo=()=>{
         try{
             const response=await axios.get(Env.baseURL + "/market");
             dispatch(setMarketData(response.data.data));
-            response.data.data.map((data)=>{console.log(data)});
         }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
             console.log(err);
         }
     }
@@ -88,10 +90,11 @@ const MarketTablo=()=>{
                                 }}
                                 rowData={marketData}
                                 onRowClicked={(val)=>getSelectedRowData(val)}
+                                onRowDoubleClicked={(val)=>getStockDataHandler(val)}
                                 rowStyle={{cursor:"pointer"}}
                             >
-                                <AgGridColumn onCellClicked={(val)=>getStockDataHandler(val)} width={115} rowDrag={true} cellClass="market-table-cell-link-hover" headerName="نماد" field="Namad"/>
-                                <AgGridColumn onCellClicked={(val)=>getStockDataHandler(val)} cellClass="market-table-cell-link-hover" width={190} headerName="نام" field="Name"/>
+                                <AgGridColumn width={115} rowDrag={true} cellClass="market-table-cell-link-hover" headerName="نماد" field="Namad"/>
+                                <AgGridColumn cellClass="market-table-cell-link-hover" width={190} headerName="نام" field="Name"/>
                                 <AgGridColumn width={60} headerName="تعداد" field="Tedad" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="حجم" field="Hajm" type="numberColumn"/>
                                 <AgGridColumn width={100} headerName="ارزش" field="Arzesh" type="numberColumn"/>
@@ -177,68 +180,72 @@ const MarketTablo=()=>{
                                 </div>
                                 <div style={{paddingTop:"10px",justifyContent:"space-around"}}>
                                     <table className="market-side-panel-blue-table">
-                                        <tr>
-                                            <th>تعداد</th>
-                                            <th>حجم</th>
-                                            <th>قیمت</th>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <th>تعداد</th>
+                                                <th>حجم</th>
+                                                <th>قیمت</th>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[1][1]}</td>
+                                                <td>{sidePanel.r[1][4].toLocaleString()}</td>
+                                                <td>{sidePanel.r[1][2]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[2][1]}</td>
+                                                <td>{sidePanel.r[2][4].toLocaleString()}</td>
+                                                <td>{sidePanel.r[2][2]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[3][1]}</td>
+                                                <td>{sidePanel.r[3][4].toLocaleString()}</td>
+                                                <td>{sidePanel.r[3][2]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[4][1]}</td>
+                                                <td>{sidePanel.r[4][4].toLocaleString()}</td>
+                                                <td>{sidePanel.r[4][2]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[5][1]}</td>
+                                                <td>{sidePanel.r[5][4].toLocaleString()}</td>
+                                                <td>{sidePanel.r[5][2]}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                     <table className="market-side-panel-red-table">
-                                        <tr>
-                                            <th>قیمت</th>
-                                            <th>حجم</th>
-                                            <th>تعداد</th>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1</td>
-                                            <td>1</td>
-                                            <td>1</td>
-                                        </tr>
+                                        <tbody>
+                                            <tr>
+                                                <th>قیمت</th>
+                                                <th>حجم</th>
+                                                <th>تعداد</th>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[1][3]}</td>
+                                                <td>{sidePanel.r[1][5].toLocaleString()}</td>
+                                                <td>{sidePanel.r[1][0]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[2][3]}</td>
+                                                <td>{sidePanel.r[2][5].toLocaleString()}</td>
+                                                <td>{sidePanel.r[2][0]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[3][3]}</td>
+                                                <td>{sidePanel.r[3][5].toLocaleString()}</td>
+                                                <td>{sidePanel.r[3][0]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[4][3]}</td>
+                                                <td>{sidePanel.r[4][5].toLocaleString()}</td>
+                                                <td>{sidePanel.r[4][0]}</td>
+                                            </tr>
+                                            <tr>
+                                                <td>{sidePanel.r[5][3]}</td>
+                                                <td>{sidePanel.r[5][5].toLocaleString()}</td>
+                                                <td>{sidePanel.r[5][0]}</td>
+                                            </tr>
+                                        </tbody>
                                     </table>
                                 </div>
                             </div>

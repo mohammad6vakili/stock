@@ -1,13 +1,15 @@
 import {
     SIDE_PANEL,
     MARKET_DATA,
-    STOCK_DATA
+    STOCK_DATA,
+    LAST_UPDATE
   } from "./Action";
        
   const initialState = {
     marketData:null,
     stockData:null,
-    sidePanel:null
+    sidePanel:null,
+    lastUpdate:null,
   };
        
   const Reducer = (state = initialState, action) => {
@@ -18,6 +20,8 @@ import {
         return {...state , stockData:action.payload};
       case SIDE_PANEL:
         return {...state , sidePanel:action.payload};
+      case LAST_UPDATE:
+        return {...state , lastUpdate:action.payload};
       default:
     return state;
     }

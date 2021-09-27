@@ -7,6 +7,7 @@
 }
 .market-mini-panel-wrapper{
     width: 22%;
+    min-width: 300px;
     height: 100%;
     padding: 10px 5px;
     border: 1px solid rgba(0, 0, 0, 0.301);
@@ -47,9 +48,6 @@
 .market-mini-panel-data>div>div{
     margin-bottom: 7px;
 }
-.market-table-cell-link-hover:hover{
-    border-bottom:2px solid rgba(0, 0, 0, 0.664) !important;
-}
 .market-side-panel-blue-table,.market-side-panel-red-table{
     width: 49%;
     font-size: 10px;
@@ -57,14 +55,14 @@
 .market-side-panel-blue-table th,.market-side-panel-blue-table td{
     border: 1px solid white;
     color: black;
-    padding: 2px;
+    padding: 2px 0;
     text-align: center;
     background-color: rgb(183, 216, 228)
 }
 .market-side-panel-red-table th,.market-side-panel-red-table td{
     border: 1px solid white;
     color: black;
-    padding: 2px;
+    padding: 2px 0;
     text-align: center;
     background-color: rgb(230, 177, 177);
 }

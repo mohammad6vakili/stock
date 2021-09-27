@@ -9,7 +9,7 @@ const PrivateRoute = (props) => {
     <Route
       {...restProps}
       render={(props) =>
-        localStorage.getItem("token") ? (
+          localStorage.getItem("token") ? (
           <Component {...props} />
         ) : (
           history.replace("/")
