@@ -6,7 +6,8 @@ import moment from "moment";
 import { setClientType, setLastupdate } from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
-import OrderListTable from './OrderListTable';
+import OrderListTable from './Extra/OrderListTable';
+import StockChart from './Extra/StockChart';
 import { Spin } from 'antd';
 
 const SotckPanel=()=>{
@@ -15,6 +16,7 @@ const SotckPanel=()=>{
     const lastUpdate=useSelector(state=>state.Reducer.lastUpdate);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
     const [showOrder , setShowOrder]=useState(true);
+    const [showStockChart,setShowStockChart]=useState(true);
 
     const lastUpdateReq=async()=>{
         try{
@@ -241,13 +243,21 @@ const SotckPanel=()=>{
                         }
                         <div className="stock-panel-body-section-item">
                             <div style={{width:"100%",display:"flex",justifyContent:'center'}}>ابزار نمایش اطلاعات</div>
-                            <div className="stock-panel-extra-section-controller">
-                                <div onClick={()=>setShowOrder(!showOrder)}>
-                                    <span>سفارش</span>
-                                    {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            <div className="stock-panel-extra-section-controller-wrapper">    
+                                <div className="stock-panel-extra-section-controller">
+                                    <div onClick={()=>setShowOrder(!showOrder)}>
+                                        <span>سفارش</span>
+                                        {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                    </div>
+                                </div>
+                                <div className="stock-panel-extra-section-controller">
+                                    <div onClick={()=>setShowStockChart(!showStockChart)}>
+                                        <span>نمودار</span>
+                                        {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                    </div>
+                                </div>
                                 </div>
                             </div>
-                        </div>
                     </div>
                 </div>
                 <div className="stock-panel-extra">
@@ -256,6 +266,14 @@ const SotckPanel=()=>{
                             <div className="stock-panel-extra-section-header">سفارش</div>
                             <div className="stock-panel-extra-section-body">
                                 <OrderListTable/>
+                            </div>
+                        </div>
+                    }
+                    {showStockChart===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">نمودار</div>
+                            <div className="stock-panel-extra-section-body">
+                                <StockChart/>
                             </div>
                         </div>
                     }

@@ -1,5 +1,5 @@
 import React from 'react';
-import "./StockPanel.css";
+import "../StockPanel.css";
 import { useSelector } from 'react-redux';
 
 

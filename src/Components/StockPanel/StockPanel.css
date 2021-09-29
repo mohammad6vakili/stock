@@ -74,6 +74,7 @@
 }
 .stock-panel-extra-section{
     width: 49%;
+    background-color: white;
     margin: 0px 3px 3px 3px;
     border-radius: 6px;
     display: flex;
@@ -135,4 +136,12 @@
     border-radius: 3px;
     cursor: pointer;
     margin: 10px;
+}
+.stock-panel-extra-section-controller-wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: center !important;
+}
+.stock-panel-extra-section-controller-wrapper>div{
+    width: unset !important;
 }
