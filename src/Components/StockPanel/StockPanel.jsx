@@ -30,21 +30,10 @@ const SotckPanel=()=>{
             console.log(err);
         }
     }
-    const stockOhlcReq=async()=>{
-        try{
-            const response=await axios.get(Env.baseURL + `/history?id=${stockData._id}`);
-            console.log(response.data);
-        }catch(err){
-            toast.error("خطا در برقراری ارتباط",{
-                position: toast.POSITION.BOTTOM_LEFT
-                });
-            console.log(err);
-        }
-    }
+
 
     useEffect(()=>{
         clientTypeReq();
-        stockOhlcReq();
     },[])
 
     return(
