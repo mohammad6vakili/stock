@@ -1,22 +1,51 @@
-import React,{useState} from 'react';
+import React,{useEffect, useState} from 'react';
 import "./Menu.css";
 import { useHistory } from 'react-router';
+import { useDispatch , useSelector } from 'react-redux';
+import Env from "../Constant/Env.json";
+import axios from 'axios';
+// import moment from 'moment';
+import * as moment from 'jalali-moment';
+import { setLastupdate } from '../Store/Action';
+import { toast } from 'react-toastify';
 import SearchStock from '../Pages/SearchStock';
 import searchImage from "../Assets/images/search.svg";
 import homeImage from '../Assets/images/home.svg';
 
 const Header=()=>{
   const history=useHistory();
-    const [isModalVisible, setIsModalVisible] = useState(false);
+  const dispatch=useDispatch();
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const lastUpdate=useSelector(state=>state.Reducer.lastUpdate);
+
+    const lastUpdateReq=async()=>{
+      try{
+          const response=await axios.get(Env.baseURL + "/history");
+          dispatch(setLastupdate(moment(response.data.date).format('DD MMM, YYYY')));
+      }catch(err){
+          toast.error("خطا در برقراری ارتباط",{
+              position: toast.POSITION.BOTTOM_LEFT
+              });
+          console.log(err);
+      }
+    }
+
     const showModal = () => {
       setIsModalVisible(true);
     };
+    
     const handleOk = () => {
       setIsModalVisible(false);
     };
+    
     const handleCancel = () => {
       setIsModalVisible(false);
     };
+
+    useEffect(()=>{
+      lastUpdateReq();
+      console.log(new Date());
+    },[]);
 
     return(
         <div className="header">
@@ -27,7 +56,11 @@ const Header=()=>{
                 <div onClick={()=>history.push("/")}><img style={{width:"140%"}} src={homeImage} alt="home" /></div>
                 <div onClick={showModal}><img src={searchImage} alt="search" /></div>
             </div>
-            <div>Infos</div>
+            <div className="header-info">
+              {lastUpdate &&
+                <div>تاریخ آخرین به روزرسانی : {moment(lastUpdate).locale('fa').format('YYYY/M/D')}</div>
+              }
+            </div>
             <SearchStock 
                 isModalVisible={isModalVisible} 
                 handleOk={handleOk}

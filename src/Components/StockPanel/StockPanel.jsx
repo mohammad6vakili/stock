@@ -2,8 +2,7 @@ import React, { useState,useEffect } from 'react';
 import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
 import axios from 'axios';
-import moment from "moment";
-import { setClientType, setLastupdate } from '../../Store/Action';
+import { setClientType } from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
@@ -13,22 +12,13 @@ import { Spin } from 'antd';
 const SotckPanel=()=>{
     const dispatch=useDispatch();
     const stockData=useSelector(state=>state.Reducer.stockData);
-    const lastUpdate=useSelector(state=>state.Reducer.lastUpdate);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(true);
+    var today = new Date();
+    var stockLastUpdate = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const stockPtoE=stockData.Payani / stockData.EPS;
 
-    const lastUpdateReq=async()=>{
-        try{
-            const response=await axios.get(Env.baseURL + "/history");
-            dispatch(setLastupdate(moment(response.data.date).format('DD MMM, YYYY')));
-        }catch(err){
-            toast.error("خطا در برقراری ارتباط",{
-                position: toast.POSITION.BOTTOM_LEFT
-                });
-            console.log(err);
-        }
-    }
     const clientTypeReq=async()=>{
         try{
             const response = await axios.get(Env.baseURL + `/clienttype?id=${stockData._id}`);
@@ -53,7 +43,6 @@ const SotckPanel=()=>{
     }
 
     useEffect(()=>{
-        lastUpdateReq();
         clientTypeReq();
         stockOhlcReq();
     },[])
@@ -111,21 +100,11 @@ const SotckPanel=()=>{
                                     <span>{JSON.parse(stockData.Arzesh).toLocaleString()}</span>
                                 </span>
                             </div>
-                            <div>
-                                <span>ارزش بازار</span>
-                                <span>
-                                    <span>(؟)</span>
-                                </span>
-                            </div>
                         </div>
                         <div className="stock-panel-body-section-item">
                             <div>
                                 <span>آخرین اطلاعات قیمت</span>
-                                <span>{lastUpdate}</span>
-                            </div>
-                            <div>
-                                <span>وضعیت</span>
-                                <span>مجاز(؟)</span>
+                                <span>{stockLastUpdate}</span>
                             </div>
                         </div>
                     </div>
@@ -168,25 +147,13 @@ const SotckPanel=()=>{
                             <div>
                                 <span>تعداد سهام</span>
                                 <span>
-                                    <span>(؟)</span>
+                                    <span>{stockData.TedadSaham}</span>
                                 </span>
                             </div>
                             <div>
                                 <span>حجم مبنا</span>
                                 <span>
                                     <span>{JSON.parse(stockData.HajmMabna).toLocaleString()}</span>
-                                </span>
-                            </div>
-                            <div>
-                                <span>سهام شناور</span>
-                                <span>
-                                    <span>(؟)</span>
-                                </span>
-                            </div>
-                            <div>
-                                <span>میانگین حجم ماه</span>
-                                <span>
-                                    <span>(؟)</span>
                                 </span>
                             </div>
                         </div>
@@ -197,15 +164,7 @@ const SotckPanel=()=>{
                             </div>
                             <div>
                                 <span>P/E :</span>
-                                <span>(؟)</span>
-                            </div>
-                            <div>
-                                <span>P/E گروه :</span>
-                                <span>(؟)</span>
-                            </div>
-                            <div>
-                                <span>P/S گروه :</span>
-                                <span>(؟)</span>
+                                <span>{stockPtoE.toFixed(2)}</span>
                             </div>
                         </div>
                     </div>
@@ -272,7 +231,7 @@ const SotckPanel=()=>{
                     {showStockChart===true &&
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">نمودار</div>
-                            <div className="stock-panel-extra-section-body">
+                            <div className="stock-panel-extra-section-body" id="mohammad">
                                 <StockChart/>
                             </div>
                         </div>

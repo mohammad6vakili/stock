@@ -2,7 +2,7 @@
   font-family: iranSans;
   src: url(/src/Assets/fonts/IRANSansWeb.ttf);
 }
-*{
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -13,37 +13,41 @@
   min-height: 100vh;
   direction: rtl;
 }
-.ag-header{
+.ag-header {
   height: 35px !important;
   min-height: 35px !important;
 }
-.ag-header-row{
+.ag-header-row {
   height: 100% !important;
 }
-.ag-header-cell-text,.ag-cell-value{
+.ag-header-cell-text,
+.ag-cell-value {
   font-size: 11px;
 }
-.ag-header-cell{
+.ag-header-cell {
   padding: 0 5px !important;
 }
-.ag-cell{
+.ag-cell {
   padding: 0 5px !important;
 }
-.ant-modal-close{
+.ant-modal-close {
   right: unset !important;
-left: 0 !important;
+  left: 0 !important;
 }
-.Toastify__toast-body{
+.Toastify__toast-body {
   color: white !important;
 }
-.Toastify__toast-icon{
-  display: none!important;
+.Toastify__toast-icon {
+  display: none !important;
 }
-.Toastify__close-button{
+.Toastify__close-button {
   color: white !important;
   opacity: 1 !important;
 }
-.Toastify__progress-bar{
+.Toastify__progress-bar {
   background-color: rgba(255, 255, 255, 0.774) !important;
-  margin-bottom: .65px !important;
+  margin-bottom: 0.65px !important;
+}
+.VictoryContainer tspan{
+  font-size: 9px !important;
 }

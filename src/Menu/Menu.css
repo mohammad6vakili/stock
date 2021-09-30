@@ -30,6 +30,10 @@
     align-items: center;
     margin-left: 10px;
 }
+.header-info{
+    display: flex;
+    align-items: center;
+}
 .header-menu>div:hover{
     background-color: rgba(216, 216, 216, 0.671);
 }
