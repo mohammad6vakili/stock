@@ -2,19 +2,12 @@ import React from 'react';
 import Chart from 'react-apexcharts'
 
 const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
-    const series = [{
-            name: 'سرانه خرید حقیقی',
-            data: saraneOne
-          }, {
-            name: 'سرانه فروش حقیقی',
-            data: saraneOne
-          }, {
-            name: 'سرانه خرید حقوقی ',
-            data: saraneOne
-          }, {
-            name: 'سرانه فروش حقوقی ',
-            data: saraneOne
-        }];
+    const series = [
+        {name: 'سرانه خرید حقیقی',data: []},
+        {name: 'سرانه خرید حقوقی ',data: saraneThree},
+        {name: 'سرانه فروش حقیقی',data: saraneTwo},
+        {name: 'سرانه فروش حقوقی ',data: saraneFour},
+    ];
     const options= {
         chart: {
           type: 'bar',
@@ -23,7 +16,7 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
         plotOptions: {
           bar: {
             horizontal: false,
-            columnWidth: '55%',
+            columnWidth: '50%',
             endingShape: 'rounded'
           },
         },
@@ -32,7 +25,7 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
         },
         stroke: {
           show: true,
-          width: 2,
+          width: 1,
           colors: ['transparent']
         },
         xaxis: {
@@ -56,7 +49,9 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
       };
 
     return(
-      <Chart options={options} series={series} type="bar" height={240} width={550} />
+        <>
+            <Chart options={options} series={series} type="bar" height={240} width={600} />
+        </>
     )
 }
 export default SaraneChart;

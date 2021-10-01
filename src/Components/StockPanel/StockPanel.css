@@ -76,7 +76,7 @@
 .stock-panel-extra-section{
     width: 49%;
     background-color: white;
-    margin: 0px 3px 3px 3px;
+    margin: 0px 3px 10px 3px;
     border-radius: 6px;
     display: flex;
     flex-direction: column;
@@ -89,6 +89,14 @@
     background-color: rgba(211, 211, 211, 0.705);
     color: black;
     font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chart-change-status-btn{
+    font-size: 10px;
+    padding: 2px 5px;
+    cursor: pointer;
 }
 .stock-panel-extra-section-body{
     width: 100%;

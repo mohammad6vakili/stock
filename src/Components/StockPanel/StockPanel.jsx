@@ -8,6 +8,7 @@ import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
 import OhlcChart from './Extra/OhlcChart';
 import SaraneChart from './Extra/SaraneChart';
+import SaraneChartTwo from './Extra/SaraneChartTwo';
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
@@ -26,9 +27,12 @@ const SotckPanel=()=>{
     const [saraneThree , setSaraneThree]=useState([]);
     const [saraneFour , setSaraneFour]=useState([]);
     const [saraneDate , setSaraneDate]=useState([]);
+
+    // visibility states-----------------------------------------------
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(false);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
+    const [saraneStatus , setSaraneStatus]=useState(false);
 
     // global variables-----------------------------------------------
     var today = new Date();
@@ -62,17 +66,45 @@ const SotckPanel=()=>{
     const hhistoryReq=async()=>{
         let abHa=[];
         let bHat=[];
+        let asHa=[];
+        let sHa=[];
+        let abHu=[];
+        let bHu=[];
+        let asHu=[];
+        let sHu=[];
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
             dispatch(setStockSarane(response.data));
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
             abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
             bHat = response.data.bHat.slice(response.data.bHat.length-chartPeriod - response.data.bHat.length);
+            asHa = response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length);
+            sHa = response.data.sHa.slice(response.data.sHa.length-chartPeriod - response.data.sHa.length);
+            abHu = response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length);
+            bHu = response.data.bHu.slice(response.data.bHu.length-chartPeriod - response.data.bHu.length);
+            asHu = response.data.asHu.slice(response.data.asHu.length-chartPeriod - response.data.asHu.length);
+            sHu = response.data.sHu.slice(response.data.sHu.length-chartPeriod - response.data.sHu.length);
             setSaraneOne(
                 abHa.map((x , index)=>{
-                    return x/bHat[index]
+                    return Math.round(x/bHat[index])
                 })
             )
+            setSaraneTwo(
+                asHa.map((x , index)=>{
+                    return Math.round(x/sHa[index])
+                })
+            )
+            setSaraneThree(
+                abHu.map((x , index)=>{
+                    return Math.round(x/bHu[index])
+                })
+            )
+            setSaraneFour(
+                asHu.map((x , index)=>{
+                    return Math.round(x/sHu[index])
+                })
+            )
+            console.log(response.data);
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -116,11 +148,18 @@ const SotckPanel=()=>{
     useEffect(()=>{
         finalGenerateChartData();
     },[stockOhlc])
+    
+    const logger=()=>{
+        console.log(saraneOne);
+        console.log(saraneTwo);
+        console.log(saraneThree);
+        console.log(saraneFour);
+    }
 
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <button onClick={()=>console.log(saraneOne)}>clicl</button>
+                <button onClick={logger}>clicl</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -339,15 +378,26 @@ const SotckPanel=()=>{
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار سرانه</span>
+                                <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
                             </div>
                             <div className="stock-panel-extra-section-body" id="mohammad">
-                                <SaraneChart 
+                                {saraneStatus===false ?
+                                    <SaraneChart 
+                                        saraneDate={saraneDate} 
+                                        saraneOne={saraneOne}
+                                        saraneTwo={saraneTwo}
+                                        saraneThree={saraneThree}
+                                        saraneFour={saraneFour}
+                                    />
+                                :
+                                <SaraneChartTwo 
                                     saraneDate={saraneDate} 
                                     saraneOne={saraneOne}
                                     saraneTwo={saraneTwo}
                                     saraneThree={saraneThree}
                                     saraneFour={saraneFour}
                                 />
+                                }
                             </div>
                         </div>
                     }
