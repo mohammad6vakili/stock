@@ -4,7 +4,8 @@ import {
     STOCK_DATA,
     LAST_UPDATE,
     CLIENT_TYPE,
-    STOCK_OHLC
+    STOCK_OHLC,
+    STOCK_SARANE
   } from "./Action";
        
   const initialState = {
@@ -14,6 +15,7 @@ import {
     lastUpdate:null,
     clienttype:null,
     stockOhlc:null,
+    stockSarane:null
   };
        
   const Reducer = (state = initialState, action) => {
@@ -30,6 +32,8 @@ import {
         return {...state , clienttype:action.payload};
       case STOCK_OHLC:
         return {...state , stockOhlc:action.payload};
+      case STOCK_SARANE:
+        return {...state , stockSarane:action.payload};
       default:
     return state;
     }

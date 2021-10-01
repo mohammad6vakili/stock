@@ -25,9 +25,7 @@ const OhlcChart=({data})=>{
       };
 
     return(
-        <>
-            <Chart options={options} series={series} type="candlestick" height={250} width={550} />
-        </>
+      <Chart options={options} series={series} type="candlestick" height={240} width={550} />
     )
 }
 export default OhlcChart;

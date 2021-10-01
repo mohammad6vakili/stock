@@ -2,22 +2,26 @@ import React, { useState,useEffect } from 'react';
 import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
 import axios from 'axios';
-import { setClientType,setStockOhlc } from '../../Store/Action';
+import { setClientType,setStockOhlc, setStockSarane } from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
 import OhlcChart from './Extra/OhlcChart';
+import SaraneChart from './Extra/SaraneChart';
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
     const stockData=useSelector(state=>state.Reducer.stockData);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
     const stockOhlc=useSelector(state=>state.Reducer.stockOhlc);
+    const stockSarane=useSelector(state=>state.Reducer.stockSarane);
     const [data , setData]=useState([]);
-    const [dataHelper , setDataHelper]=useState([]);
+    const [saraneData , setSaraneData]=useState([]);
+    const [saraneDate , setSaraneDate]=useState([]);
     const [chartPeriod , setChartPeriod]=useState(30);
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(false);
+    const [showSaraneChart , setShowSaraneChart]=useState(true);
     var today = new Date();
     var stockLastUpdate = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const stockPtoE=stockData.Payani / stockData.EPS;
@@ -32,11 +36,23 @@ const SotckPanel=()=>{
         }
     }
 
-    
     const stockOhlcReq=async()=>{
         try{
             const response=await axios.get(Env.baseURL + `/history?id=${stockData._id}`);
             dispatch(setStockOhlc(response.data))
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
+    const hhistoryReq=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
+            dispatch(setStockSarane(response.data));
+            setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -74,6 +90,7 @@ const SotckPanel=()=>{
     useEffect(()=>{
         clientTypeReq();
         stockOhlcReq();
+        hhistoryReq();
     },[])
 
     useEffect(()=>{
@@ -83,7 +100,7 @@ const SotckPanel=()=>{
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <button onClick={()=>console.log(data)}>clicl</button>
+                <button onClick={()=>console.log(saraneDate)}>clicl</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -254,19 +271,25 @@ const SotckPanel=()=>{
                         }
                         <div className="stock-panel-body-section-item">
                             <div style={{width:"100%",display:"flex",justifyContent:'center'}}>ابزار نمایش اطلاعات</div>
-                            <div className="stock-panel-extra-section-controller-wrapper">    
-                                <div className="stock-panel-extra-section-controller">
-                                    <div onClick={()=>setShowOrder(!showOrder)}>
-                                        <span>سفارش</span>
-                                        {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                <div className="stock-panel-extra-section-controller-wrapper">    
+                                    <div className="stock-panel-extra-section-controller">
+                                        <div onClick={()=>setShowOrder(!showOrder)}>
+                                            <span style={{textAlign:"center"}}>سفارش</span>
+                                            {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="stock-panel-extra-section-controller">
-                                    <div onClick={()=>setShowStockChart(!showStockChart)}>
-                                        <span>نمودار</span>
-                                        {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                    <div className="stock-panel-extra-section-controller">
+                                        <div onClick={()=>setShowStockChart(!showStockChart)}>
+                                            <span style={{textAlign:"center"}}>نمودار</span>
+                                            {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                        </div>
                                     </div>
-                                </div>
+                                    <div className="stock-panel-extra-section-controller">
+                                        <div onClick={()=>setShowSaraneChart(!showSaraneChart)}>
+                                            <span style={{textAlign:"center"}}>سرانه</span>
+                                            {showSaraneChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div>
@@ -289,6 +312,16 @@ const SotckPanel=()=>{
                             </div>
                             <div className="stock-panel-extra-section-body" id="mohammad">
                                 <OhlcChart data={data}/>
+                            </div>
+                        </div>
+                    }
+                    {showSaraneChart===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار سرانه</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body" id="mohammad">
+                                <SaraneChart saraneDate={saraneDate}/>
                             </div>
                         </div>
                     }
