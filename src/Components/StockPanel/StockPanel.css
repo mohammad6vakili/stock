@@ -112,21 +112,21 @@
 .market-stock-panel-blue-table th{
     border: 1px solid white;
     color: black;
-    padding: 2px 0;
+    padding: 10px 0;
     text-align: center;
     background-color: rgb(183, 216, 228)
 }
 .market-stock-panel-red-table th{
     border: 1px solid white;
     color: black;
-    padding: 2px 0;
+    padding: 10px 0;
     text-align: center;
     background-color: rgb(230, 177, 177);
 }
 .market-stock-panel-red-table td , .market-stock-panel-blue-table td{
     background-color: rgba(209, 209, 209, 0.5);
     border: 1px solid white;
-    padding: 1px 3px;
+    padding: 5px 3px;
     text-align: center;
 }
 .stock-panel-extra-section-controller{

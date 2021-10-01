@@ -9,6 +9,7 @@ import OrderListTable from './Extra/OrderListTable';
 import OhlcChart from './Extra/OhlcChart';
 import SaraneChart from './Extra/SaraneChart';
 import SaraneChartTwo from './Extra/SaraneChartTwo';
+import OhlcChartTwo from './Extra/OhlcChartTwo';
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
@@ -22,6 +23,8 @@ const SotckPanel=()=>{
     // states-----------------------------------------------
     const [chartPeriod , setChartPeriod]=useState(7);
     const [data , setData]=useState([]);
+    const [closeData , setCloseData]=useState([]);
+    const [ohlcDate , setOhlcDate]=useState([]);
     const [saraneOne , setSaraneOne]=useState([]);
     const [saraneTwo , setSaraneTwo]=useState([]);
     const [saraneThree , setSaraneThree]=useState([]);
@@ -32,6 +35,7 @@ const SotckPanel=()=>{
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(false);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
+    const [ohlcStatus , setOhlcStatus]=useState(false);
     const [saraneStatus , setSaraneStatus]=useState(false);
 
     // global variables-----------------------------------------------
@@ -54,7 +58,9 @@ const SotckPanel=()=>{
     const stockOhlcReq=async()=>{
         try{
             const response=await axios.get(Env.baseURL + `/history?id=${stockData._id}`);
-            dispatch(setStockOhlc(response.data))
+            dispatch(setStockOhlc(response.data));
+            setCloseData(response.data.close.slice(response.data.close.length-chartPeriod - response.data.close.length));
+            setOhlcDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -368,9 +374,15 @@ const SotckPanel=()=>{
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار</span>
+                                <button className="chart-change-status-btn" onClick={()=>setOhlcStatus(!ohlcStatus)}>تغییر وضعیت نمودار</button>
                             </div>
-                            <div className="stock-panel-extra-section-body" id="mohammad">
-                                <OhlcChart data={data}/>
+                            <div className="stock-panel-extra-section-body">
+                                {ohlcStatus===false 
+                                ?
+                                    <OhlcChart data={data}/>
+                                :
+                                    <OhlcChartTwo data={closeData} ohlcDate={ohlcDate}/>
+                                }
                             </div>
                         </div>
                     }
@@ -380,7 +392,7 @@ const SotckPanel=()=>{
                                 <span>نمودار سرانه</span>
                                 <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
                             </div>
-                            <div className="stock-panel-extra-section-body" id="mohammad">
+                            <div className="stock-panel-extra-section-body">
                                 {saraneStatus===false ?
                                     <SaraneChart 
                                         saraneDate={saraneDate} 
