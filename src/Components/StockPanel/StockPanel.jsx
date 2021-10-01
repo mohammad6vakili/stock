@@ -2,19 +2,22 @@ import React, { useState,useEffect } from 'react';
 import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
 import axios from 'axios';
-import { setClientType } from '../../Store/Action';
+import { setClientType,setStockOhlc } from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
-import StockChart from './Extra/StockChart';
-import { Spin } from 'antd';
+import OhlcChart from './Extra/OhlcChart';
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
     const stockData=useSelector(state=>state.Reducer.stockData);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
+    const stockOhlc=useSelector(state=>state.Reducer.stockOhlc);
+    const [data , setData]=useState([]);
+    const [dataHelper , setDataHelper]=useState([]);
+    const [chartPeriod , setChartPeriod]=useState(30);
     const [showOrder , setShowOrder]=useState(true);
-    const [showStockChart,setShowStockChart]=useState(true);
+    const [showStockChart,setShowStockChart]=useState(false);
     var today = new Date();
     var stockLastUpdate = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const stockPtoE=stockData.Payani / stockData.EPS;
@@ -24,6 +27,17 @@ const SotckPanel=()=>{
             const response = await axios.get(Env.baseURL + `/clienttype?id=${stockData._id}`);
             dispatch(setClientType(response.data));
         }catch(err){
+            dispatch(setClientType(null));
+            console.log(err);
+        }
+    }
+
+    
+    const stockOhlcReq=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + `/history?id=${stockData._id}`);
+            dispatch(setStockOhlc(response.data))
+        }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
                 });
@@ -31,14 +45,45 @@ const SotckPanel=()=>{
         }
     }
 
+    const generateChartData=async()=>{
+        if(stockOhlc){
+            await stockOhlc.date.map((date,index)=>{
+                data.push({x:date,y:[]});
+            })
+            await stockOhlc.open.map((open , index)=>{
+                data[index].y.push(open);
+            })
+            await stockOhlc.hight.map((high,index)=>{
+                data[index].y.push(high);
+            })
+            await stockOhlc.low.map((low,index)=>{
+                data[index].y.push(low);
+            })
+            stockOhlc.close.map((close,index)=>{
+                data[index].y.push(close);
+            })
+        }
+    }
+
+    const finalGenerateChartData=()=>{
+            generateChartData();
+            let allLastItem= data.slice(data.length-chartPeriod , data.length);
+            setData(allLastItem);
+    }
 
     useEffect(()=>{
         clientTypeReq();
+        stockOhlcReq();
     },[])
+
+    useEffect(()=>{
+        finalGenerateChartData();
+    },[stockOhlc])
 
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
+                <button onClick={()=>console.log(data)}>clicl</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -186,8 +231,26 @@ const SotckPanel=()=>{
                                     <span>{clienttype.sHut.toLocaleString()}</span>
                                 </div>
                             </div>
-                        :
-                            <Spin size='large'/>
+                            :
+                            <div className="stock-panel-body-section-item">
+                                <div>
+                                    <span></span>
+                                    <span>خرید</span>
+                                    <span>فروش</span>
+                                </div>
+                                <div>
+                                    <span>حجم حقیقی</span>
+                                </div>
+                                <div>
+                                    <span>حجم حقوقی</span>
+                                </div>
+                                <div>
+                                    <span>تعداد حقیقی</span>
+                                </div>
+                                <div>
+                                    <span>تعداد حقوقی</span>
+                                </div>
+                            </div>
                         }
                         <div className="stock-panel-body-section-item">
                             <div style={{width:"100%",display:"flex",justifyContent:'center'}}>ابزار نمایش اطلاعات</div>
@@ -211,7 +274,9 @@ const SotckPanel=()=>{
                 <div className="stock-panel-extra">
                     {showOrder===true &&
                         <div className="stock-panel-extra-section">
-                            <div className="stock-panel-extra-section-header">سفارش</div>
+                            <div className="stock-panel-extra-section-header">
+                                <span>سفارش</span>
+                            </div>
                             <div className="stock-panel-extra-section-body">
                                 <OrderListTable/>
                             </div>
@@ -219,9 +284,11 @@ const SotckPanel=()=>{
                     }
                     {showStockChart===true &&
                         <div className="stock-panel-extra-section">
-                            <div className="stock-panel-extra-section-header">نمودار</div>
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار</span>
+                            </div>
                             <div className="stock-panel-extra-section-body" id="mohammad">
-                                <StockChart/>
+                                <OhlcChart data={data}/>
                             </div>
                         </div>
                     }
