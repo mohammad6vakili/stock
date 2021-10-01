@@ -51,3 +51,9 @@
 .apexcharts-title-text{
   display: none !important;
 }
+.apexcharts-legend-marker,.apexcharts-tooltip-marker{
+  margin-left: 3px;
+}
+.apexcharts-legend-text{
+  font-weight: 550 !important;
+}

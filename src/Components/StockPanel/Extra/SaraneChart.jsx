@@ -1,16 +1,19 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
 
-const SaraneChart=({saraneDate})=>{
+const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
     const series = [{
             name: 'سرانه خرید حقیقی',
-            data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+            data: saraneOne
           }, {
-            name: 'Revenue',
-            data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+            name: 'سرانه فروش حقیقی',
+            data: saraneOne
           }, {
-            name: 'Free Cash Flow',
-            data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+            name: 'سرانه خرید حقوقی ',
+            data: saraneOne
+          }, {
+            name: 'سرانه فروش حقوقی ',
+            data: saraneOne
         }];
     const options= {
         chart: {
@@ -44,11 +47,11 @@ const SaraneChart=({saraneDate})=>{
           opacity: 1
         },
         tooltip: {
-          y: {
-            formatter: function (val) {
-              return "سرانه"
+            y: {
+                formatter: function (val) {
+                  return val
+                }
             }
-          }
         }
       };
 

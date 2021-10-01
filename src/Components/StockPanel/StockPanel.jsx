@@ -11,21 +11,32 @@ import SaraneChart from './Extra/SaraneChart';
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
+    
+    // global states-----------------------------------------------
     const stockData=useSelector(state=>state.Reducer.stockData);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
     const stockOhlc=useSelector(state=>state.Reducer.stockOhlc);
     const stockSarane=useSelector(state=>state.Reducer.stockSarane);
+
+    // states-----------------------------------------------
+    const [chartPeriod , setChartPeriod]=useState(7);
     const [data , setData]=useState([]);
-    const [saraneData , setSaraneData]=useState([]);
+    const [saraneOne , setSaraneOne]=useState([]);
+    const [saraneTwo , setSaraneTwo]=useState([]);
+    const [saraneThree , setSaraneThree]=useState([]);
+    const [saraneFour , setSaraneFour]=useState([]);
     const [saraneDate , setSaraneDate]=useState([]);
-    const [chartPeriod , setChartPeriod]=useState(30);
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(false);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
+
+    // global variables-----------------------------------------------
     var today = new Date();
     var stockLastUpdate = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const stockPtoE=stockData.Payani / stockData.EPS;
-
+    
+    
+    // functions-----------------------------------------------
     const clientTypeReq=async()=>{
         try{
             const response = await axios.get(Env.baseURL + `/clienttype?id=${stockData._id}`);
@@ -49,10 +60,19 @@ const SotckPanel=()=>{
     }
 
     const hhistoryReq=async()=>{
+        let abHa=[];
+        let bHat=[];
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
             dispatch(setStockSarane(response.data));
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
+            abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
+            bHat = response.data.bHat.slice(response.data.bHat.length-chartPeriod - response.data.bHat.length);
+            setSaraneOne(
+                abHa.map((x , index)=>{
+                    return x/bHat[index]
+                })
+            )
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -100,7 +120,7 @@ const SotckPanel=()=>{
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <button onClick={()=>console.log(saraneDate)}>clicl</button>
+                <button onClick={()=>console.log(saraneOne)}>clicl</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -321,7 +341,13 @@ const SotckPanel=()=>{
                                 <span>نمودار سرانه</span>
                             </div>
                             <div className="stock-panel-extra-section-body" id="mohammad">
-                                <SaraneChart saraneDate={saraneDate}/>
+                                <SaraneChart 
+                                    saraneDate={saraneDate} 
+                                    saraneOne={saraneOne}
+                                    saraneTwo={saraneTwo}
+                                    saraneThree={saraneThree}
+                                    saraneFour={saraneFour}
+                                />
                             </div>
                         </div>
                     }
