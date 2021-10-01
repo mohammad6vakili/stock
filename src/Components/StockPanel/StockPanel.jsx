@@ -21,9 +21,13 @@ const SotckPanel=()=>{
 
     // states-----------------------------------------------
     const [chartPeriod , setChartPeriod]=useState(7);
+
+    // ohlc-----------------------------------------------
     const [data , setData]=useState([]);
     const [closeData , setCloseData]=useState([]);
     const [ohlcDate , setOhlcDate]=useState([]);
+    
+    // hhistory-----------------------------------------------
     const [saraneOne , setSaraneOne]=useState([]);
     const [saraneTwo , setSaraneTwo]=useState([]);
     const [saraneThree , setSaraneThree]=useState([]);
@@ -33,12 +37,24 @@ const SotckPanel=()=>{
     const [hArzeshThree , setHArzeshThree]=useState([]);
     const [hArzeshFour , setHArzeshFour]=useState([]);
     const [saraneDate , setSaraneDate]=useState([]);
+    
+    // clientseries-----------------------------------------------
+    const [saraneTime , setSaraneTime]=useState([]);
+    const [saraneOneT , setSaraneOneT]=useState([]);
+    const [saraneTwoT , setSaraneTwoT]=useState([]);
+    const [saraneThreeT , setSaraneThreeT]=useState([]);
+    const [saraneFourT , setSaraneFourT]=useState([]);
+    const [hArzeshOneT , setHArzeshOneT]=useState([]);
+    const [hArzeshTwoT , setHArzeshTwoT]=useState([]);
+    const [hArzeshThreeT , setHArzeshThreeT]=useState([]);
+    const [hArzeshFourT , setHArzeshFourT]=useState([]);
 
     // visibility states-----------------------------------------------
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
     const [ohlcStatus , setOhlcStatus]=useState(false);
+    const [hourOrDay , setHourOrDay]=useState(false);
     const [saraneStatus , setSaraneStatus]=useState(false);
 
     // global variables-----------------------------------------------
@@ -133,7 +149,58 @@ const SotckPanel=()=>{
                     return Math.round(x/sHu[index])
                 })
             )
-            console.log(response.data);
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
+    const clientseriesReq=async()=>{
+        let abHa=[];
+        let bHat=[];
+        let asHa=[];
+        let sHa=[];
+        let abHu=[];
+        let bHu=[];
+        let asHu=[];
+        let sHu=[];
+        try{
+            const response=await axios.get(Env.baseURL + `/clientseries?id=${stockData._id}`);
+            setSaraneTime(response.data.date);
+            abHa = response.data.abHa.slice(response.data.abHa);
+            bHat = response.data.bHat.slice(response.data.bHat);
+            asHa = response.data.asHa.slice(response.data.asHa);
+            sHa = response.data.sHa.slice(response.data.sHa);
+            abHu = response.data.abHu.slice(response.data.abHu);
+            bHu = response.data.bHu.slice(response.data.bHu);
+            asHu = response.data.asHu.slice(response.data.asHu);
+            sHu = response.data.sHu.slice(response.data.sHu);
+            setHArzeshOneT(response.data.abHa.slice(response.data.abHa));
+            setHArzeshTwoT(response.data.abHu.slice(response.data.abHu));
+            setHArzeshThreeT(response.data.asHa.slice(response.data.asHa));
+            setHArzeshFourT(response.data.asHu.slice(response.data.asHu));
+            setSaraneOneT(
+                abHa.map((x , index)=>{
+                    return Math.round(x/bHat[index])
+                })
+            )
+            setSaraneTwoT(
+                asHa.map((x , index)=>{
+                    return Math.round(x/sHa[index])
+                })
+            )
+            setSaraneThreeT(
+                abHu.map((x , index)=>{
+                    return Math.round(x/bHu[index])
+                })
+            )
+            setSaraneFourT(
+                asHu.map((x , index)=>{
+                    return Math.round(x/sHu[index])
+                })
+            )
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -146,14 +213,12 @@ const SotckPanel=()=>{
         clientTypeReq();
         stockOhlcReq();
         hhistoryReq();
+        clientseriesReq();
     },[])
 
 
     const logger=()=>{
-        console.log(hArzeshOne);
-        console.log(hArzeshTwo);
-        console.log(hArzeshThree);
-        console.log(hArzeshFour);
+        console.log(saraneTime);
     }
 
     return(
@@ -384,27 +449,34 @@ const SotckPanel=()=>{
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار سرانه</span>
-                                <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
+                                <div>
+                                    <button style={{marginLeft:"5px"}} className="chart-change-status-btn" onClick={()=>setHourOrDay(!hourOrDay)}>تغییر بازه ی زمانی</button>
+                                    <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
+                                </div>
                             </div>
-                            <div className="stock-panel-extra-section-body">
-                                {saraneStatus===false ?
-                                    <SaraneChart 
-                                        saraneDate={saraneDate} 
-                                        saraneOne={saraneOne}
-                                        saraneTwo={saraneTwo}
-                                        saraneThree={saraneThree}
-                                        saraneFour={saraneFour}
-                                    />
-                                :
-                                    <SaraneChartTwo 
-                                        saraneDate={saraneDate} 
-                                        hArzeshOne={hArzeshOne}
-                                        hArzeshTwo={hArzeshTwo}
-                                        hArzeshThree={hArzeshThree}
-                                        hArzeshFour={hArzeshFour}
-                                    />
-                                }
-                            </div>
+                            {hourOrDay===false ?
+                                <div className="stock-panel-extra-section-body">
+                                    {saraneStatus===false ?
+                                        <SaraneChart 
+                                            saraneDate={saraneDate} 
+                                            saraneOne={saraneOne}
+                                            saraneTwo={saraneTwo}
+                                            saraneThree={saraneThree}
+                                            saraneFour={saraneFour}
+                                        />
+                                    :
+                                        <SaraneChartTwo 
+                                            saraneDate={saraneDate} 
+                                            hArzeshOne={hArzeshOne}
+                                            hArzeshTwo={hArzeshTwo}
+                                            hArzeshThree={hArzeshThree}
+                                            hArzeshFour={hArzeshFour}
+                                        />
+                                    }
+                                </div>
+                            :
+                                <div>نمودار کلاینت سریس</div>
+                            }
                         </div>
                     }
                 </div>
