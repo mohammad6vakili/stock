@@ -6,7 +6,6 @@ import { setStockData } from '../Store/Action';
 import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 
-
 const SearchStock=({isModalVisible , handleCancel , handleOk , setIsModalVisible})=>{
     const dispatch=useDispatch();
     const history=useHistory();

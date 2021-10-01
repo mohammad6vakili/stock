@@ -1,12 +1,20 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
 
-const SaraneChartTwo=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
+const SaraneChartTwo=({saraneDate,hArzeshOne,hArzeshTwo,hArzeshThree,hArzeshFour})=>{
     const series = [
-        {name: 'سرانه خرید حقیقی',data: []},
-        {name: 'سرانه خرید حقوقی ',data: saraneThree},
-        {name: 'سرانه فروش حقیقی',data: saraneTwo},
-        {name: 'سرانه فروش حقوقی ',data: saraneFour},
+        {
+          name: 'ارزش خرید حقیقی',data: hArzeshOne
+        },
+        {
+          name: 'ارزش خرید حقوقی ',data: hArzeshTwo
+        },
+        {
+          name: 'ارزش فروش حقیقی',data: hArzeshThree
+        },
+        {
+          name: 'ارزش فروش حقوقی ',data: hArzeshFour
+        },
     ];
     const options= {
         chart: {
@@ -30,6 +38,9 @@ const SaraneChartTwo=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>
               }
             }
           }],
+          dataLabels: {
+            enabled: false,
+            },
           plotOptions: {
             bar: {
               horizontal: false,
@@ -38,6 +49,13 @@ const SaraneChartTwo=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>
           },
           xaxis: {
             categories: saraneDate
+          },
+          yaxis: {
+            show: true,
+            labels: {
+                show: true,
+                align: 'center',
+            }
           },
           legend: {
             position: 'bottom',

@@ -18,10 +18,12 @@ const OhlcChart=({data})=>{
           type: 'datetime'
         },
         yaxis: {
-          tooltip: {
-            enabled: true
+          show: true,
+          labels: {
+              show: true,
+              align: 'center',
           }
-        }
+        },
       };
 
     return(

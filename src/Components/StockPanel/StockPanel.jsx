@@ -2,7 +2,7 @@ import React, { useState,useEffect } from 'react';
 import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
 import axios from 'axios';
-import { setClientType,setStockOhlc, setStockSarane } from '../../Store/Action';
+import { setClientType,setStockOhlc} from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
@@ -18,7 +18,6 @@ const SotckPanel=()=>{
     const stockData=useSelector(state=>state.Reducer.stockData);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
     const stockOhlc=useSelector(state=>state.Reducer.stockOhlc);
-    const stockSarane=useSelector(state=>state.Reducer.stockSarane);
 
     // states-----------------------------------------------
     const [chartPeriod , setChartPeriod]=useState(7);
@@ -29,11 +28,15 @@ const SotckPanel=()=>{
     const [saraneTwo , setSaraneTwo]=useState([]);
     const [saraneThree , setSaraneThree]=useState([]);
     const [saraneFour , setSaraneFour]=useState([]);
+    const [hArzeshOne , setHArzeshOne]=useState([]);
+    const [hArzeshTwo , setHArzeshTwo]=useState([]);
+    const [hArzeshThree , setHArzeshThree]=useState([]);
+    const [hArzeshFour , setHArzeshFour]=useState([]);
     const [saraneDate , setSaraneDate]=useState([]);
 
     // visibility states-----------------------------------------------
     const [showOrder , setShowOrder]=useState(true);
-    const [showStockChart,setShowStockChart]=useState(false);
+    const [showStockChart,setShowStockChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
     const [ohlcStatus , setOhlcStatus]=useState(false);
     const [saraneStatus , setSaraneStatus]=useState(false);
@@ -61,6 +64,23 @@ const SotckPanel=()=>{
             dispatch(setStockOhlc(response.data));
             setCloseData(response.data.close.slice(response.data.close.length-chartPeriod - response.data.close.length));
             setOhlcDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
+            await response.data.date.map((date,index)=>{
+                data.push({x:date,y:[]});
+            })
+            await response.data.open.map((open , index)=>{
+                data[index].y.push(open);
+            })
+            await response.data.hight.map((high,index)=>{
+                data[index].y.push(high);
+            })
+            await response.data.low.map((low,index)=>{
+                data[index].y.push(low);
+            })
+            response.data.close.map((close,index)=>{
+                data[index].y.push(close);
+            })
+            let allLastItem= data.slice(data.length-chartPeriod , data.length);
+            setData(allLastItem);
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -80,7 +100,6 @@ const SotckPanel=()=>{
         let sHu=[];
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
-            dispatch(setStockSarane(response.data));
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
             abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
             bHat = response.data.bHat.slice(response.data.bHat.length-chartPeriod - response.data.bHat.length);
@@ -90,6 +109,10 @@ const SotckPanel=()=>{
             bHu = response.data.bHu.slice(response.data.bHu.length-chartPeriod - response.data.bHu.length);
             asHu = response.data.asHu.slice(response.data.asHu.length-chartPeriod - response.data.asHu.length);
             sHu = response.data.sHu.slice(response.data.sHu.length-chartPeriod - response.data.sHu.length);
+            setHArzeshOne(response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length));
+            setHArzeshTwo(response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length));
+            setHArzeshThree(response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length));
+            setHArzeshFour(response.data.asHu.slice(response.data.asHu.length-chartPeriod - response.data.asHu.length));
             setSaraneOne(
                 abHa.map((x , index)=>{
                     return Math.round(x/bHat[index])
@@ -119,53 +142,24 @@ const SotckPanel=()=>{
         }
     }
 
-    const generateChartData=async()=>{
-        if(stockOhlc){
-            await stockOhlc.date.map((date,index)=>{
-                data.push({x:date,y:[]});
-            })
-            await stockOhlc.open.map((open , index)=>{
-                data[index].y.push(open);
-            })
-            await stockOhlc.hight.map((high,index)=>{
-                data[index].y.push(high);
-            })
-            await stockOhlc.low.map((low,index)=>{
-                data[index].y.push(low);
-            })
-            stockOhlc.close.map((close,index)=>{
-                data[index].y.push(close);
-            })
-        }
-    }
-
-    const finalGenerateChartData=()=>{
-            generateChartData();
-            let allLastItem= data.slice(data.length-chartPeriod , data.length);
-            setData(allLastItem);
-    }
-
     useEffect(()=>{
         clientTypeReq();
         stockOhlcReq();
         hhistoryReq();
     },[])
 
-    useEffect(()=>{
-        finalGenerateChartData();
-    },[stockOhlc])
-    
+
     const logger=()=>{
-        console.log(saraneOne);
-        console.log(saraneTwo);
-        console.log(saraneThree);
-        console.log(saraneFour);
+        console.log(hArzeshOne);
+        console.log(hArzeshTwo);
+        console.log(hArzeshThree);
+        console.log(hArzeshFour);
     }
 
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <button onClick={logger}>clicl</button>
+                <button onClick={logger}>click</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -381,7 +375,7 @@ const SotckPanel=()=>{
                                 ?
                                     <OhlcChart data={data}/>
                                 :
-                                    <OhlcChartTwo data={closeData} ohlcDate={ohlcDate}/>
+                                    <OhlcChartTwo closeData={closeData} ohlcDate={ohlcDate}/>
                                 }
                             </div>
                         </div>
@@ -402,13 +396,13 @@ const SotckPanel=()=>{
                                         saraneFour={saraneFour}
                                     />
                                 :
-                                <SaraneChartTwo 
-                                    saraneDate={saraneDate} 
-                                    saraneOne={saraneOne}
-                                    saraneTwo={saraneTwo}
-                                    saraneThree={saraneThree}
-                                    saraneFour={saraneFour}
-                                />
+                                    <SaraneChartTwo 
+                                        saraneDate={saraneDate} 
+                                        hArzeshOne={hArzeshOne}
+                                        hArzeshTwo={hArzeshTwo}
+                                        hArzeshThree={hArzeshThree}
+                                        hArzeshFour={hArzeshFour}
+                                    />
                                 }
                             </div>
                         </div>

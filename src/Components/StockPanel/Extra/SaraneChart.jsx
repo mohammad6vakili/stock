@@ -32,8 +32,10 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
           categories: saraneDate,
         },
         yaxis: {
-          title: {
-            text: ''
+          show: true,
+          labels: {
+              show: true,
+              align: 'center',
           }
         },
         fill: {

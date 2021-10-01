@@ -1,10 +1,10 @@
 import React from 'react';
 import Chart from 'react-apexcharts'
 
-const OhlcChartTwo=({data,ohlcDate})=>{
+const OhlcChartTwo=({closeData,ohlcDate})=>{
     const series = [{
         name: "Close",
-        data: data
+        data: closeData
     }];
     const options = {
         chart: {
@@ -20,10 +20,12 @@ const OhlcChartTwo=({data,ohlcDate})=>{
           categories: ohlcDate,
         },
         yaxis: {
-          tooltip: {
-            enabled: true
+          show: true,
+          labels: {
+              show: true,
+              align: 'center',
           }
-        }
+        },
       };
 
     return(

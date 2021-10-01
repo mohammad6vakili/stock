@@ -15,7 +15,6 @@ import {
     lastUpdate:null,
     clienttype:null,
     stockOhlc:null,
-    stockSarane:null
   };
        
   const Reducer = (state = initialState, action) => {
@@ -32,8 +31,6 @@ import {
         return {...state , clienttype:action.payload};
       case STOCK_OHLC:
         return {...state , stockOhlc:action.payload};
-      case STOCK_SARANE:
-        return {...state , stockSarane:action.payload};
       default:
     return state;
     }
