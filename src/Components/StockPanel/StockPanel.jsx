@@ -7,9 +7,13 @@ import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
 import OhlcChart from './Extra/OhlcChart';
+import OhlcChartTwo from './Extra/OhlcChartTwo';
 import SaraneChart from './Extra/SaraneChart';
 import SaraneChartTwo from './Extra/SaraneChartTwo';
-import OhlcChartTwo from './Extra/OhlcChartTwo';
+import SaraneChartT from "./Extra/SaraneChartT";
+import SaraneChartTwoT from './Extra/SaraneChartTwoT';
+
+
 
 const SotckPanel=()=>{
     const dispatch=useDispatch();
@@ -39,7 +43,7 @@ const SotckPanel=()=>{
     const [saraneDate , setSaraneDate]=useState([]);
     
     // clientseries-----------------------------------------------
-    const [saraneTime , setSaraneTime]=useState([]);
+    const [saraneDateT , setSaraneDateT]=useState([]);
     const [saraneOneT , setSaraneOneT]=useState([]);
     const [saraneTwoT , setSaraneTwoT]=useState([]);
     const [saraneThreeT , setSaraneThreeT]=useState([]);
@@ -53,9 +57,10 @@ const SotckPanel=()=>{
     const [showOrder , setShowOrder]=useState(true);
     const [showStockChart,setShowStockChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
+    const [showSaraneChartT , setShowSaraneChartT]=useState(true);
     const [ohlcStatus , setOhlcStatus]=useState(false);
-    const [hourOrDay , setHourOrDay]=useState(false);
     const [saraneStatus , setSaraneStatus]=useState(false);
+    const [saraneStatusT , setSaraneStatusT]=useState(false);
 
     // global variables-----------------------------------------------
     var today = new Date();
@@ -168,7 +173,8 @@ const SotckPanel=()=>{
         let sHu=[];
         try{
             const response=await axios.get(Env.baseURL + `/clientseries?id=${stockData._id}`);
-            setSaraneTime(response.data.date);
+            setSaraneDateT(response.data.time);
+            console.log(response.data.time);
             abHa = response.data.abHa.slice(response.data.abHa);
             bHat = response.data.bHat.slice(response.data.bHat);
             asHa = response.data.asHa.slice(response.data.asHa);
@@ -216,15 +222,9 @@ const SotckPanel=()=>{
         clientseriesReq();
     },[])
 
-
-    const logger=()=>{
-        console.log(saraneTime);
-    }
-
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <button onClick={logger}>click</button>
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
@@ -414,6 +414,12 @@ const SotckPanel=()=>{
                                             {showSaraneChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
                                         </div>
                                     </div>
+                                    <div className="stock-panel-extra-section-controller">
+                                        <div onClick={()=>setShowSaraneChartT(!showSaraneChartT)}>
+                                            <span style={{textAlign:"center"}}>سرانه(طول روز)</span>
+                                            {showSaraneChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                     </div>
@@ -432,7 +438,7 @@ const SotckPanel=()=>{
                     {showStockChart===true &&
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
-                                <span>نمودار</span>
+                                <span>نمودار {ohlcStatus===false ? <span>قیمت</span> : <span>قیمت پایانی</span>}</span>
                                 <button className="chart-change-status-btn" onClick={()=>setOhlcStatus(!ohlcStatus)}>تغییر وضعیت نمودار</button>
                             </div>
                             <div className="stock-panel-extra-section-body">
@@ -448,35 +454,59 @@ const SotckPanel=()=>{
                     {showSaraneChart===true &&
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
-                                <span>نمودار سرانه</span>
+                                <span>نمودار {saraneStatus===false ? <span>سرانه</span> : <span>ارزش</span>}</span>
                                 <div>
-                                    <button style={{marginLeft:"5px"}} className="chart-change-status-btn" onClick={()=>setHourOrDay(!hourOrDay)}>تغییر بازه ی زمانی</button>
                                     <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
                                 </div>
                             </div>
-                            {hourOrDay===false ?
-                                <div className="stock-panel-extra-section-body">
-                                    {saraneStatus===false ?
-                                        <SaraneChart 
-                                            saraneDate={saraneDate} 
-                                            saraneOne={saraneOne}
-                                            saraneTwo={saraneTwo}
-                                            saraneThree={saraneThree}
-                                            saraneFour={saraneFour}
-                                        />
-                                    :
-                                        <SaraneChartTwo 
-                                            saraneDate={saraneDate} 
-                                            hArzeshOne={hArzeshOne}
-                                            hArzeshTwo={hArzeshTwo}
-                                            hArzeshThree={hArzeshThree}
-                                            hArzeshFour={hArzeshFour}
-                                        />
-                                    }
+                            <div className="stock-panel-extra-section-body">
+                                {saraneStatus===false ?
+                                    <SaraneChart 
+                                        saraneDate={saraneDate} 
+                                        saraneOne={saraneOne}
+                                        saraneTwo={saraneTwo}
+                                        saraneThree={saraneThree}
+                                        saraneFour={saraneFour}
+                                    />
+                                :
+                                    <SaraneChartTwo 
+                                        saraneDate={saraneDate} 
+                                        hArzeshOne={hArzeshOne}
+                                        hArzeshTwo={hArzeshTwo}
+                                        hArzeshThree={hArzeshThree}
+                                        hArzeshFour={hArzeshFour}
+                                    />
+                                }
+                            </div>
+                        </div>
+                    }
+                    {showSaraneChartT===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار {saraneStatusT===false ? <span>سرانه</span> : <span>ارزش</span>} در طول روز</span>
+                                <div>
+                                    <button className="chart-change-status-btn" onClick={()=>setSaraneStatusT(!saraneStatusT)}>تغییر وضعیت نمودار</button>
                                 </div>
-                            :
-                                <div>نمودار کلاینت سریس</div>
-                            }
+                            </div>
+                            <div className="stock-panel-extra-section-body">
+                                {saraneStatusT===false ?
+                                    <SaraneChartT
+                                        saraneDateT={saraneDateT} 
+                                        saraneOneT={saraneOneT}
+                                        saraneTwoT={saraneTwoT}
+                                        saraneThreeT={saraneThreeT}
+                                        saraneFourT={saraneFourT}
+                                    />
+                                :
+                                    <SaraneChartTwoT
+                                        saraneDateT={saraneDateT}
+                                        hArzeshOneT={hArzeshOneT}
+                                        hArzeshTwoT={hArzeshTwoT}
+                                        hArzeshThreeT={hArzeshThreeT}
+                                        hArzeshFourT={hArzeshFourT}
+                                    />
+                                }
+                            </div>
                         </div>
                     }
                 </div>
