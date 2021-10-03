@@ -3,7 +3,7 @@ import Chart from 'react-apexcharts'
 
 const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
     const series = [
-        {name: 'سرانه خرید حقیقی',data: []},
+        {name: 'سرانه خرید حقیقی',data: saraneOne},
         {name: 'سرانه خرید حقوقی ',data: saraneThree},
         {name: 'سرانه فروش حقیقی',data: saraneTwo},
         {name: 'سرانه فروش حقوقی ',data: saraneFour},
@@ -11,7 +11,7 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
     const options= {
         chart: {
           type: 'bar',
-          height: 350
+          height: 350,
         },
         plotOptions: {
           bar: {

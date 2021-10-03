@@ -15,7 +15,7 @@ const OhlcChart=({data})=>{
           align: 'left'
         },
         xaxis: {
-          // type: 'datetime'
+          type: 'category'
         },
         yaxis: {
           show: true,

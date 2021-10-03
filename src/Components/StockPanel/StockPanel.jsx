@@ -86,7 +86,7 @@ const SotckPanel=()=>{
             setCloseData(response.data.close.slice(response.data.close.length-chartPeriod - response.data.close.length));
             setOhlcDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
             await response.data.date.map((date,index)=>{
-                data.push({x:date,y:[]});
+                data.push({x:[1],y:[]});
             })
             await response.data.open.map((open , index)=>{
                 data[index].y.push(open);
@@ -112,24 +112,24 @@ const SotckPanel=()=>{
 
     const hhistoryReq=async()=>{
         let abHa=[];
-        let bHat=[];
         let asHa=[];
-        let sHa=[];
         let abHu=[];
-        let bHu=[];
         let asHu=[];
-        let sHu=[];
+        let bHat=[];
+        let sHat=[];
+        let bHut=[];
+        let sHut=[];
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
             abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
-            bHat = response.data.bHat.slice(response.data.bHat.length-chartPeriod - response.data.bHat.length);
             asHa = response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length);
-            sHa = response.data.sHa.slice(response.data.sHa.length-chartPeriod - response.data.sHa.length);
             abHu = response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length);
-            bHu = response.data.bHu.slice(response.data.bHu.length-chartPeriod - response.data.bHu.length);
             asHu = response.data.asHu.slice(response.data.asHu.length-chartPeriod - response.data.asHu.length);
-            sHu = response.data.sHu.slice(response.data.sHu.length-chartPeriod - response.data.sHu.length);
+            bHat = response.data.bHat.slice(response.data.bHat.length-chartPeriod - response.data.bHat.length);
+            sHat = response.data.sHat.slice(response.data.sHat.length-chartPeriod - response.data.sHat.length);
+            bHut = response.data.bHut.slice(response.data.bHut.length-chartPeriod - response.data.bHut.length);
+            sHut = response.data.sHut.slice(response.data.sHut.length-chartPeriod - response.data.sHut.length);
             setHArzeshOne(response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length));
             setHArzeshTwo(response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length));
             setHArzeshThree(response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length));
@@ -141,17 +141,17 @@ const SotckPanel=()=>{
             )
             setSaraneTwo(
                 asHa.map((x , index)=>{
-                    return Math.round(x/sHa[index])
+                    return Math.round(x/sHat[index])
                 })
             )
             setSaraneThree(
                 abHu.map((x , index)=>{
-                    return Math.round(x/bHu[index])
+                    return Math.round(x/bHut[index])
                 })
             )
             setSaraneFour(
                 asHu.map((x , index)=>{
-                    return Math.round(x/sHu[index])
+                    return Math.round(x/sHut[index])
                 })
             )
         }catch(err){
@@ -164,25 +164,25 @@ const SotckPanel=()=>{
 
     const clientseriesReq=async()=>{
         let abHa=[];
-        let bHat=[];
         let asHa=[];
-        let sHa=[];
         let abHu=[];
-        let bHu=[];
         let asHu=[];
-        let sHu=[];
+        let bHat=[];
+        let sHat=[];
+        let bHut=[];
+        let sHut=[];
         try{
             const response=await axios.get(Env.baseURL + `/clientseries?id=${stockData._id}`);
             setSaraneDateT(response.data.time);
             console.log(response.data.time);
             abHa = response.data.abHa.slice(response.data.abHa);
-            bHat = response.data.bHat.slice(response.data.bHat);
             asHa = response.data.asHa.slice(response.data.asHa);
-            sHa = response.data.sHa.slice(response.data.sHa);
             abHu = response.data.abHu.slice(response.data.abHu);
-            bHu = response.data.bHu.slice(response.data.bHu);
             asHu = response.data.asHu.slice(response.data.asHu);
-            sHu = response.data.sHu.slice(response.data.sHu);
+            bHat = response.data.bHat.slice(response.data.bHat);
+            sHat = response.data.sHat.slice(response.data.sHat);
+            bHut = response.data.bHut.slice(response.data.bHut);
+            sHut = response.data.sHut.slice(response.data.sHut);
             setHArzeshOneT(response.data.abHa.slice(response.data.abHa));
             setHArzeshTwoT(response.data.abHu.slice(response.data.abHu));
             setHArzeshThreeT(response.data.asHa.slice(response.data.asHa));
@@ -194,17 +194,17 @@ const SotckPanel=()=>{
             )
             setSaraneTwoT(
                 asHa.map((x , index)=>{
-                    return Math.round(x/sHa[index])
+                    return Math.round(x/sHat[index])
                 })
             )
             setSaraneThreeT(
                 abHu.map((x , index)=>{
-                    return Math.round(x/bHu[index])
+                    return Math.round(x/bHut[index])
                 })
             )
             setSaraneFourT(
                 asHu.map((x , index)=>{
-                    return Math.round(x/sHu[index])
+                    return Math.round(x/sHut[index])
                 })
             )
         }catch(err){
@@ -224,6 +224,7 @@ const SotckPanel=()=>{
 
     return(
         <div className="stock-panel-wrapper">
+            <button onClick={()=>console.log(data)}>click</button>
             <div className="stock-panel">
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">

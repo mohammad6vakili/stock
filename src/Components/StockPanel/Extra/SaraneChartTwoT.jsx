@@ -50,8 +50,12 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
           xaxis: {
             categories: saraneDateT,
             labels: {
-                offsetX: -10,
-                offsetY: 20,
+                offsetX: -2,
+                offsetY: 25,
+                  rotate: -90,
+                  style: {
+                    fontSize: '11px',
+                  },
             }
           },
           yaxis: {
