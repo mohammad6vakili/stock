@@ -1,11 +1,13 @@
 import React, { useState,useEffect } from 'react';
 import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
+import FormatNumber from "../../Helper/FormatNumber";
 import axios from 'axios';
-import { setClientType,setStockOhlc} from '../../Store/Action';
+import { setClientType,setStockOhlc, setStockSignal} from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';
+import StockSignals from "./Extra/StockSignals";
 import OhlcChart from './Extra/OhlcChart';
 import OhlcChartTwo from './Extra/OhlcChartTwo';
 import SaraneChart from './Extra/SaraneChart';
@@ -21,7 +23,7 @@ const SotckPanel=()=>{
     // global states-----------------------------------------------
     const stockData=useSelector(state=>state.Reducer.stockData);
     const clienttype=useSelector(state=>state.Reducer.clienttype);
-    const stockOhlc=useSelector(state=>state.Reducer.stockOhlc);
+    const stockSignal=useSelector(state=>state.Reducer.stockSignal);
 
     // states-----------------------------------------------
     const [chartPeriod , setChartPeriod]=useState(7);
@@ -55,6 +57,7 @@ const SotckPanel=()=>{
 
     // visibility states-----------------------------------------------
     const [showOrder , setShowOrder]=useState(true);
+    const [showSignal , setShowSignal]=useState(true);
     const [showStockChart,setShowStockChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
     const [showSaraneChartT , setShowSaraneChartT]=useState(true);
@@ -174,7 +177,6 @@ const SotckPanel=()=>{
         try{
             const response=await axios.get(Env.baseURL + `/clientseries?id=${stockData._id}`);
             setSaraneDateT(response.data.time);
-            console.log(response.data.time);
             abHa = response.data.abHa.slice(response.data.abHa);
             asHa = response.data.asHa.slice(response.data.asHa);
             abHu = response.data.abHu.slice(response.data.abHu);
@@ -215,16 +217,28 @@ const SotckPanel=()=>{
         }
     }
 
+    const getStockSignal=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + `/signal?id=${stockData._id}`);
+            dispatch(setStockSignal(response.data));
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         clientTypeReq();
         stockOhlcReq();
         hhistoryReq();
         clientseriesReq();
+        getStockSignal();
     },[])
 
     return(
         <div className="stock-panel-wrapper">
-            <button onClick={()=>console.log(data)}>click</button>
             <div className="stock-panel">
                 <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
                 <div className="stock-panel-body">
@@ -267,13 +281,13 @@ const SotckPanel=()=>{
                             <div>
                                 <span>حجم معاملات</span>
                                 <span>
-                                    <span>{JSON.parse(stockData.Hajm).toLocaleString()}</span>
+                                    <span>{FormatNumber(stockData.Hajm)}</span>
                                 </span>
                             </div>
                             <div>
                                 <span>ارزش معاملات</span>
                                 <span>
-                                    <span>{JSON.parse(stockData.Arzesh).toLocaleString()}</span>
+                                    <span>{FormatNumber(stockData.Arzesh)}</span>
                                 </span>
                             </div>
                         </div>
@@ -284,7 +298,7 @@ const SotckPanel=()=>{
                             </div>
                         </div>
                     </div>
-                    <div className="stock-panel-body-section">
+                    <div className="stock-panel-body-section">  
                         <div className="stock-panel-body-section-item">
                             <div>
                                 <span>بازه روز</span>
@@ -302,34 +316,18 @@ const SotckPanel=()=>{
                                     <span>{JSON.parse(stockData.HadeMojazU).toLocaleString()}</span>
                                 </span>
                             </div>
-                            <div>
-                                <span>بازه هفته</span>
-                                <span>
-                                    <span>(؟)</span>
-                                    <span style={{margin:"0 10px"}}>_</span>
-                                    <span>(؟)</span>
-                                </span>
-                            </div>
-                            <div>
-                                <span>بازه سال</span>
-                                <span>
-                                    <span>(؟)</span>
-                                    <span style={{margin:"0 10px"}}>_</span>
-                                    <span>(؟)</span>
-                                </span>
-                            </div>
                         </div>
                         <div className="stock-panel-body-section-item">
                             <div>
                                 <span>تعداد سهام</span>
                                 <span>
-                                    <span>{stockData.TedadSaham}</span>
+                                    <span>{FormatNumber(stockData.TedadSaham)}</span>
                                 </span>
                             </div>
                             <div>
                                 <span>حجم مبنا</span>
                                 <span>
-                                    <span>{JSON.parse(stockData.HajmMabna).toLocaleString()}</span>
+                                    <span>{FormatNumber(stockData.HajmMabna)}</span>
                                 </span>
                             </div>
                         </div>
@@ -354,13 +352,13 @@ const SotckPanel=()=>{
                                 </div>
                                 <div>
                                     <span>حجم حقیقی</span>
-                                    <span>{clienttype.bHa.toLocaleString()}</span>
-                                    <span>{clienttype.sHa.toLocaleString()}</span>
+                                    <span>{FormatNumber(clienttype.bHa)}</span>
+                                    <span>{FormatNumber(clienttype.sHa)}</span>
                                 </div>
                                 <div>
                                     <span>حجم حقوقی</span>
-                                    <span>{clienttype.bHu.toLocaleString()}</span>
-                                    <span>{clienttype.sHu.toLocaleString()}</span>
+                                    <span>{FormatNumber(clienttype.bHu)}</span>
+                                    <span>{FormatNumber(clienttype.sHu)}</span>
                                 </div>
                                 <div>
                                     <span>تعداد حقیقی</span>
@@ -404,6 +402,12 @@ const SotckPanel=()=>{
                                         </div>
                                     </div>
                                     <div className="stock-panel-extra-section-controller">
+                                        <div onClick={()=>setShowSignal(!showSignal)}>
+                                            <span style={{textAlign:"center"}}>سیگنال ها</span>
+                                            {showSignal===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                                        </div>
+                                    </div>
+                                    <div className="stock-panel-extra-section-controller">
                                         <div onClick={()=>setShowStockChart(!showStockChart)}>
                                             <span style={{textAlign:"center"}}>نمودار</span>
                                             {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
@@ -433,6 +437,17 @@ const SotckPanel=()=>{
                             </div>
                             <div className="stock-panel-extra-section-body">
                                 <OrderListTable/>
+                            </div>
+                        </div>
+                    }
+                    {showSignal===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">
+                                <span>سیگنال ها</span>
+                                <span>{stockSignal && stockSignal.time}</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body">
+                                <StockSignals/>
                             </div>
                         </div>
                     }
@@ -482,7 +497,7 @@ const SotckPanel=()=>{
                         </div>
                     }
                     {showSaraneChartT===true &&
-                        <div className="stock-panel-extra-section">
+                        <div className="stock-panel-extra-section" style={{width:"98.5%"}}>
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار {saraneStatusT===false ? <span>سرانه</span> : <span>ارزش</span>} در طول روز</span>
                                 <div>

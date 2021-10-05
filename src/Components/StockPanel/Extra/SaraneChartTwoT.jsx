@@ -76,7 +76,7 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
 
     return(
         <>
-            <Chart options={options} series={series} type="bar" height={240} width={600} />
+            <Chart options={options} series={series} type="bar" height={240} width={1150} />
         </>
     )
 }

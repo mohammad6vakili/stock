@@ -11,6 +11,8 @@ import { toast } from 'react-toastify';
 import SearchStock from '../Pages/SearchStock';
 import searchImage from "../Assets/images/search.svg";
 import homeImage from '../Assets/images/home.svg';
+import signalImage from "../Assets/images/radio.png";
+
 
 const Header=()=>{
   const history=useHistory();
@@ -31,6 +33,7 @@ const Header=()=>{
     }
 
     const showModal = () => {
+      history.push("/");
       setIsModalVisible(true);
     };
     
@@ -53,8 +56,27 @@ const Header=()=>{
                 Logo
             </div>
             <div className="header-menu">
-                <div onClick={()=>history.push("/")}><img style={{width:"140%"}} src={homeImage} alt="home" /></div>
-                <div onClick={showModal}><img src={searchImage} alt="search" /></div>
+                <div 
+                  onClick={()=>history.push("/")}
+                  data-target="tooltip"
+                  title="دیده بان"
+                >
+                  <img style={{width:"140%"}} src={homeImage} alt="home" />
+                </div>
+                <div 
+                  onClick={showModal}
+                  data-target="tooltip"
+                  title="جست و جوی سهم"
+                >
+                  <img src={searchImage} alt="search" />
+                </div>
+                <div
+                  onClick={()=>history.push("/signals")}
+                  data-target="tooltip"
+                  title="سیگنال ها"
+                >
+                  <img src={signalImage} alt="signal"/>
+                </div>
             </div>
             <div className="header-info">
               {lastUpdate &&

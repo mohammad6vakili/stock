@@ -40,7 +40,8 @@ const SearchStock=({isModalVisible , handleCancel , handleOk , setIsModalVisible
             footer={[]}
         >
             <div className="search-stock-modal-body">
-                <Input 
+                <Input
+                    autoFocus
                     className="search-stock-input"
                     onChange={(e)=>searchStockFunc(e)}
                 />

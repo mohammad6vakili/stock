@@ -1,13 +1,11 @@
-import React,{useEffect} from 'react';
+import React,{useEffect, useState} from 'react';
 import "./Market.css";
-import axios from 'axios';
-import Env from "../../Constant/Env.json";
+import FormatNumber from "../../Helper/FormatNumber";
 import {AgGridColumn, AgGridReact} from 'ag-grid-react';
 import { useDispatch , useSelector} from 'react-redux';
 import { setMarketData , setSidePanel, setStockData} from '../../Store/Action';
 import { Spin } from 'antd';
 import { useHistory } from 'react-router';
-import { toast } from 'react-toastify';
 
 
 const MarketTablo=()=>{
@@ -15,22 +13,9 @@ const MarketTablo=()=>{
     const dispatch=useDispatch();
     const marketData=useSelector(state=>state.Reducer.marketData);
     const sidePanel=useSelector(state=>state.Reducer.sidePanel);
-    useEffect(()=>{
-        getMarketData();
-    },[])
+    const [tableData , setTableData]=useState(null);
 
-    const getMarketData=async()=>{
-        try{
-            const response=await axios.get(Env.baseURL + "/market");
-            dispatch(setMarketData(response.data.data));
-        }catch(err){
-            toast.error("خطا در برقراری ارتباط",{
-                position: toast.POSITION.BOTTOM_LEFT
-                });
-            console.log(err);
-        }
-    }
-     const getSelectedRowData = (val) => {
+    const getSelectedRowData = (val) => {
         dispatch(setSidePanel((val.data)));
     }
     const getStockDataHandler=(val)=>{
@@ -38,9 +23,18 @@ const MarketTablo=()=>{
         history.push("/stock-panel");
     } 
     
-    return(
+    useEffect(()=>{
+        setTableData(marketData);
+        if(tableData){
+            tableData.map((data)=>{
+                data.Hajm=FormatNumber(JSON.parse(data.Hajm))
+            })
+        }
+    },[marketData])
+
+        return(
         <div className="market">
-            {!marketData ? <Spin size="large" /> :
+            {!tableData ? <Spin size="large" /> :
             <>
                 <div
                     className="ag-theme-alpine"
@@ -88,7 +82,7 @@ const MarketTablo=()=>{
                                     },
                                 },
                                 }}
-                                rowData={marketData}
+                                rowData={tableData}
                                 onRowClicked={(val)=>getSelectedRowData(val)}
                                 onRowDoubleClicked={(val)=>getStockDataHandler(val)}
                                 rowStyle={{cursor:"pointer"}}
@@ -96,7 +90,7 @@ const MarketTablo=()=>{
                                 <AgGridColumn width={115} rowDrag={true} cellClass="market-table-cell-link-hover" headerName="نماد" field="Namad"/>
                                 <AgGridColumn cellClass="market-table-cell-link-hover" width={190} headerName="نام" field="Name"/>
                                 <AgGridColumn width={60} headerName="تعداد" field="Tedad" type="numberColumn"/>
-                                <AgGridColumn width={70} headerName="حجم" field="Hajm" type="numberColumn"/>
+                                <AgGridColumn width={80} headerName="حجم" field="Hajm" type="numberColumn"/>
                                 <AgGridColumn width={100} headerName="ارزش" field="Arzesh" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="دیروز" field="Yesterday" type="numberColumn"/>
                                 {/* <AgGridColumn width={60} headerName="Clock" field="Clock" type="numberColumn"/> */}
@@ -162,15 +156,15 @@ const MarketTablo=()=>{
                                         <span>تعداد</span><span>{JSON.parse(sidePanel.Tedad).toLocaleString()}</span>
                                     </div>
                                     <div style={{width:"40%",display:"flex",justifyContent:"space-between"}}>
-                                        <span>ارزش</span><span>{JSON.parse(sidePanel.Arzesh).toLocaleString()}</span>
+                                        <span>ارزش</span><span>{FormatNumber(sidePanel.Arzesh)}</span>
                                     </div>
                                 </div>
                                 <div style={{justifyContent:"space-between",borderBottom:"1px solid #D7D7D7",paddingBottom:"5px"}}>
                                     <div style={{width:"50%",display:"flex",justifyContent:"space-between"}}>
-                                        <span>حجم</span><span>{JSON.parse(sidePanel.Hajm).toLocaleString()}</span>
+                                        <span>حجم</span><span>{FormatNumber(sidePanel.Hajm)}</span>
                                     </div>
                                     <div style={{width:"40%",display:"flex",justifyContent:"space-between"}}>
-                                        <span>حجم مبنا</span><span>{JSON.parse(sidePanel.HajmMabna).toLocaleString()}</span>
+                                        <span>حجم مبنا</span><span>{FormatNumber(sidePanel.HajmMabna)}</span>
                                     </div>
                                 </div>
                                 <div style={{borderBottom:"1px solid #D7D7D7",paddingTop:"5px"}}>
