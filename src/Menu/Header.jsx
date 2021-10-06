@@ -12,6 +12,7 @@ import SearchStock from '../Pages/SearchStock';
 import searchImage from "../Assets/images/search.svg";
 import homeImage from '../Assets/images/home.svg';
 import signalImage from "../Assets/images/radio.png";
+import chartImage from "../Assets/images/insight.png";
 
 
 const Header=()=>{
@@ -62,6 +63,13 @@ const Header=()=>{
                   title="دیده بان"
                 >
                   <img style={{width:"140%"}} src={homeImage} alt="home" />
+                </div>
+                <div
+                  onClick={()=>history.push("/charts")}
+                  data-target="tooltip"
+                  title="نمودار"
+                >
+                  <img style={{width:"100%"}} src={chartImage} alt="charts" />
                 </div>
                 <div 
                   onClick={showModal}

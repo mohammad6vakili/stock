@@ -11,7 +11,7 @@ import Market from './Components/Market/Market';
 import Header from './Menu/Header';
 import SotckPanel from './Components/StockPanel/StockPanel';
 import Signals from './Components/Signals/Signals';
-
+import Charts from './Components/Charts/Charts';
 
 const App=()=>{
   const dispatch=useDispatch();
@@ -39,6 +39,7 @@ const getMarketData=async()=>{
         <Header/>
         <Switch>
           <Route path="/" exact component={Market}/>
+          {marketData ? <Route path="/charts" component={Charts} /> : <Redirect to="/" />}
           {marketData ? <Route path="/signals" component={Signals} /> : <Redirect to="/" />}
           {stockData ? <Route path="/stock-panel" component={SotckPanel} /> : <Redirect to="/" />}
         </Switch>

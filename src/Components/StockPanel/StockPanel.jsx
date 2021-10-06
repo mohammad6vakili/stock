@@ -27,6 +27,7 @@ const SotckPanel=()=>{
 
     // states-----------------------------------------------
     const [chartPeriod , setChartPeriod]=useState(7);
+    const [stockSarane , setStockSarane]=useState(null);
 
     // ohlc-----------------------------------------------
     const [data , setData]=useState([]);
@@ -229,18 +230,65 @@ const SotckPanel=()=>{
         }
     }
 
+    const getStockSarane=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + `/sarane?id=${stockData._id}`)
+            setStockSarane(response.data);
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         clientTypeReq();
         stockOhlcReq();
         hhistoryReq();
         clientseriesReq();
         getStockSignal();
+        getStockSarane();
     },[])
 
     return(
         <div className="stock-panel-wrapper">
             <div className="stock-panel">
-                <div className="stock-panel-header">{stockData.Name}({stockData.Namad})</div>
+                <div className="stock-panel-header">
+                    <div>{stockData.Name} ({stockData.Namad})</div>
+                    <div className="stock-panel-extra-section-controller-wrapper">
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowOrder(!showOrder)}>
+                                <span style={{textAlign:"center"}}>سفارش</span>
+                                {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowSignal(!showSignal)}>
+                                <span style={{textAlign:"center"}}>سیگنال ها</span>
+                                {showSignal===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowStockChart(!showStockChart)}>
+                                <span style={{textAlign:"center"}}>نمودار</span>
+                                {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowSaraneChart(!showSaraneChart)}>
+                                <span style={{textAlign:"center"}}>سرانه</span>
+                                {showSaraneChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowSaraneChartT(!showSaraneChartT)}>
+                                <span style={{textAlign:"center"}}>سرانه(طول روز)</span>
+                                {showSaraneChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div className="stock-panel-body">
                     <div className="stock-panel-body-section">
                         <div className="stock-panel-body-section-item">
@@ -392,41 +440,61 @@ const SotckPanel=()=>{
                                 </div>
                             </div>
                         }
-                        <div className="stock-panel-body-section-item">
-                            <div style={{width:"100%",display:"flex",justifyContent:'center'}}>ابزار نمایش اطلاعات</div>
-                                <div className="stock-panel-extra-section-controller-wrapper">    
-                                    <div className="stock-panel-extra-section-controller">
-                                        <div onClick={()=>setShowOrder(!showOrder)}>
-                                            <span style={{textAlign:"center"}}>سفارش</span>
-                                            {showOrder===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
-                                        </div>
-                                    </div>
-                                    <div className="stock-panel-extra-section-controller">
-                                        <div onClick={()=>setShowSignal(!showSignal)}>
-                                            <span style={{textAlign:"center"}}>سیگنال ها</span>
-                                            {showSignal===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
-                                        </div>
-                                    </div>
-                                    <div className="stock-panel-extra-section-controller">
-                                        <div onClick={()=>setShowStockChart(!showStockChart)}>
-                                            <span style={{textAlign:"center"}}>نمودار</span>
-                                            {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
-                                        </div>
-                                    </div>
-                                    <div className="stock-panel-extra-section-controller">
-                                        <div onClick={()=>setShowSaraneChart(!showSaraneChart)}>
-                                            <span style={{textAlign:"center"}}>سرانه</span>
-                                            {showSaraneChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
-                                        </div>
-                                    </div>
-                                    <div className="stock-panel-extra-section-controller">
-                                        <div onClick={()=>setShowSaraneChartT(!showSaraneChartT)}>
-                                            <span style={{textAlign:"center"}}>سرانه(طول روز)</span>
-                                            {showSaraneChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
-                                        </div>
-                                    </div>
+                        {stockSarane ?
+                            <div className="stock-panel-body-section-item stock-panel-body-section-item-secondary">
+                                <div>
+                                    <span>سرانه خرید حقیقی :</span>
+                                    <span>{stockSarane.S_bHa.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span>سرانه خرید حقوقی :</span>
+                                    <span>{stockSarane.S_bHu.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش حقیقی :</span>
+                                    <span>{stockSarane.S_sHa.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش حقوقی :</span>
+                                    <span>{stockSarane.S_sHu.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span>سرانه خرید کل بازار :</span>
+                                    <span>{stockSarane.SaraneB.toLocaleString()}</span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش کل بازار :</span>
+                                    <span>{stockSarane.SaraneS.toLocaleString()}</span>
                                 </div>
                             </div>
+                            :
+                            <div className="stock-panel-body-section-item stock-panel-body-section-item-secondary">
+                                <div>
+                                    <span>سرانه خرید حقیقی :</span>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>سرانه خرید حقوقی :</span>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش حقیقی :</span>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش حقوقی :</span>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>سرانه خرید کل بازار :</span>
+                                    <span></span>
+                                </div>
+                                <div>
+                                    <span>سرانه فروش کل بازار :</span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
                 <div className="stock-panel-extra">
