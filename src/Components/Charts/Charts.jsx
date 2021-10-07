@@ -5,6 +5,7 @@ import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import MarketArray from './Extra/MarketArray';
 import MarketExcite from './Extra/MarketExcite';
+import ArzeshChart from "./Extra/ArzeshChart";
 
 const Charts =()=>{
     const [DataOne , setDataOne]=useState([]);
@@ -23,6 +24,10 @@ const Charts =()=>{
     const [exEight , setExEight]=useState([]);
     const [exNine , setExNine]=useState([]);
     const [exTen , setExTen]=useState([]);
+
+    const [arzeshCat , setArzeshCat]=useState([]);
+    const [arzeshBuy , setArzeshBuy]=useState([]);
+    const [arzeshSale , setArzeshSale]=useState([]);
 
     const getMarketArray=async()=>{
         try{
@@ -110,9 +115,31 @@ const Charts =()=>{
         }
     }
     
+    const getMarketArzesh=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + "/arzesh");
+            for (let index=0;index<Object.keys(response.data).length;index++) {
+                arzeshBuy.push([Object.keys(response.data)[index],Object.values(response.data)[index][0][1]]);
+                arzeshSale.push([Object.keys(response.data)[index],Object.values(response.data)[index][1][1]]);
+            }
+            setArzeshBuy(arzeshBuy.map((data)=>{
+                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60) + parseInt(data[0].split(":")[2], 10),data[1]];
+            }))
+            setArzeshSale(arzeshSale.map((data)=>{
+                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60) + parseInt(data[0].split(":")[2], 10),data[1]];
+            }))
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         getMarketArray();
         getMarketExcite();
+        getMarketArzesh();
     },[])
     
 
@@ -136,6 +163,11 @@ const Charts =()=>{
                 exEight={exEight}
                 exNine={exNine}
                 exTen={exTen}            
+            />
+            <ArzeshChart
+                arzeshCat={arzeshCat}
+                arzeshBuy={arzeshBuy}
+                arzeshSale={arzeshSale}
             />
         </div>
     )
