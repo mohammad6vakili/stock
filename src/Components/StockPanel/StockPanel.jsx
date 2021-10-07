@@ -3,6 +3,7 @@ import "./StockPanel.css";
 import { useSelector , useDispatch} from 'react-redux';
 import FormatNumber from "../../Helper/FormatNumber";
 import axios from 'axios';
+import * as moment from 'jalali-moment';
 import { setClientType,setStockOhlc, setStockSignal} from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
@@ -93,8 +94,11 @@ const SotckPanel=()=>{
             dispatch(setStockOhlc(response.data));
             setCloseData(response.data.close.slice(response.data.close.length-chartPeriod - response.data.close.length));
             setOhlcDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
+            setOhlcDate(ohlcDate.map((date)=>{
+                return moment(date.toString()).locale('fa').format('YYYY/M/D')
+            }))
             await response.data.date.map((date,index)=>{
-                data.push({x:[1],y:[]});
+                data.push({x:[moment(date.toString()).locale('fa').format('YYYY/M/D')],y:[]});
             })
             await response.data.open.map((open , index)=>{
                 data[index].y.push(open);
@@ -130,6 +134,9 @@ const SotckPanel=()=>{
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
+            setSaraneDate(saraneDate.map((date)=>{
+                return moment(date.toString()).locale('fa').format('YYYY/M/D')
+            }))
             abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
             asHa = response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length);
             abHu = response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length);

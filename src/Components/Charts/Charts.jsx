@@ -139,19 +139,37 @@ const Charts =()=>{
         }
     }
 
-    const getMarketQueue=async()=>{
+    const getMarketQueue=async(date)=>{
         try{
-            const response=await axios.get(Env.baseURL + "/filter?id=series");
-            response.data.time.map((data,index)=>{
-                buyQueue.push([data,response.data.BuyQueue.count[index]]);
-                saleQueue.push([data,response.data.SellQueue.count[index]]);
-            })
-            setBuyQueue(buyQueue.map((data)=>{
-                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
-            }))
-            setSaleQueue(saleQueue.map((data)=>{
-                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
-            }))
+            if(date){
+                const response=await axios.get(Env.baseURL + `/filterstore?date=${date}`);
+                console.log(response.data);
+                response.data.time.map((data,index)=>{
+                    buyQueue.push([data,response.data.BuyQueue.count[index]]);
+                    saleQueue.push([data,response.data.SellQueue.count[index]]);
+                })
+                setBuyQueue(buyQueue.map((data)=>{
+                    return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+                }))
+                setSaleQueue(saleQueue.map((data)=>{
+                    return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+                }))    
+            }else{
+                const response=await axios.get(Env.baseURL + "/filter?id=series");
+                console.log(response.data);
+                setBuyQueue([]);
+                setSaleQueue([]);
+                response.data.time.map((data,index)=>{
+                    buyQueue.push([data,response.data.BuyQueue.count[index]]);
+                    saleQueue.push([data,response.data.SellQueue.count[index]]);
+                })
+                setBuyQueue(buyQueue.map((data)=>{
+                    return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+                }))
+                setSaleQueue(saleQueue.map((data)=>{
+                    return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+                }))    
+            }
         }catch(err){
             toast.error("خطا در برقراری ارتباط",{
                 position: toast.POSITION.BOTTOM_LEFT
@@ -195,7 +213,10 @@ const Charts =()=>{
             />
             <MarketQueue 
                 buyQueue={buyQueue}
+                setBuyQueue={setBuyQueue}
+                setSaleQueue={setSaleQueue}
                 saleQueue={saleQueue}
+                getMarketQueue={getMarketQueue}
             />
         </div>
     )

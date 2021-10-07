@@ -1,8 +1,12 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
+import { ConfigProvider } from 'antd';
+import 'moment/locale/fa';
+import { DatePicker as DatePickerJalali } from "antd-jalali";
+import fa_IR from "antd/lib/locale/fa_IR";
 
 
-const MarketQueue=({buyQueue,saleQueue})=>{
+const MarketQueue=({buyQueue,saleQueue,getMarketQueue,setSaleQueue,setBuyQueue})=>{
         const series= [
             {
                 name: "تعداد صف های خرید",
@@ -53,11 +57,23 @@ const MarketQueue=({buyQueue,saleQueue})=>{
               },
           },
         };
-      
+        const getDate=(value)=>{
+          getMarketQueue(value.$y.toString() + ("0" + (value.$M+1).toString()).slice(-2) + ("0" + (value.$D).toString()).slice(-2))
+        }
 
     return(
         <div className="charts-card">
-            <div className="charts-card-header">نمودار تغییرات تعداد صف ها</div>
+            <div className="charts-card-header">
+              <span>نمودار تغییرات تعداد صف ها</span>
+              <div style={{marginRight:"20px"}}>
+                {/* <ConfigProvider locale={fa_IR}  direction="rtl">
+                  <DatePickerJalali 
+                    style={{border:"none",width:"120px", borderBottom:"2px solid #91A0C1",borderRadius:"0"}}
+                    onChange={(value)=>getDate(value)}
+                  />
+                </ConfigProvider> */}
+              </div>
+            </div>
             <ReactApexChart options={options} series={series} type="line" height={250} width={800} />
         </div>
     )
