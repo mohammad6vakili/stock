@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import MarketArray from './Extra/MarketArray';
 import MarketExcite from './Extra/MarketExcite';
 import ArzeshChart from "./Extra/ArzeshChart";
+import MarketQueue from './Extra/MarketQueue';
 
 const Charts =()=>{
     const [DataOne , setDataOne]=useState([]);
@@ -25,9 +26,11 @@ const Charts =()=>{
     const [exNine , setExNine]=useState([]);
     const [exTen , setExTen]=useState([]);
 
-    const [arzeshCat , setArzeshCat]=useState([]);
     const [arzeshBuy , setArzeshBuy]=useState([]);
     const [arzeshSale , setArzeshSale]=useState([]);
+
+    const [buyQueue , setBuyQueue]=useState([]);
+    const [saleQueue , setSaleQueue]=useState([]);
 
     const getMarketArray=async()=>{
         try{
@@ -136,10 +139,32 @@ const Charts =()=>{
         }
     }
 
+    const getMarketQueue=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + "/filter?id=series");
+            response.data.time.map((data,index)=>{
+                buyQueue.push([data,response.data.BuyQueue.count[index]]);
+                saleQueue.push([data,response.data.SellQueue.count[index]]);
+            })
+            setBuyQueue(buyQueue.map((data)=>{
+                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+            }))
+            setSaleQueue(saleQueue.map((data)=>{
+                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+            }))
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         getMarketArray();
         getMarketExcite();
         getMarketArzesh();
+        getMarketQueue();
     },[])
     
 
@@ -165,9 +190,12 @@ const Charts =()=>{
                 exTen={exTen}            
             />
             <ArzeshChart
-                arzeshCat={arzeshCat}
                 arzeshBuy={arzeshBuy}
                 arzeshSale={arzeshSale}
+            />
+            <MarketQueue 
+                buyQueue={buyQueue}
+                saleQueue={saleQueue}
             />
         </div>
     )

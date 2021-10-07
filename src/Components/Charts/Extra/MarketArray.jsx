@@ -92,7 +92,7 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
     return(
         <div className="charts-card">
             <div className="charts-card-header">نمودار وضعیت بازار</div>
-            <ReactApexChart options={options} series={series} type="area" height={300} width={1250} />
+            <ReactApexChart options={options} series={series} type="area" height={250} width={800} />
         </div>
     )
 }

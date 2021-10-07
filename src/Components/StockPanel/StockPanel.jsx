@@ -14,6 +14,7 @@ import SaraneChart from './Extra/SaraneChart';
 import SaraneChartTwo from './Extra/SaraneChartTwo';
 import SaraneChartT from "./Extra/SaraneChartT";
 import SaraneChartTwoT from './Extra/SaraneChartTwoT';
+import EnterMoneyChart from './Extra/EnterMoneyChart';
 
 
 
@@ -55,6 +56,9 @@ const SotckPanel=()=>{
     const [hArzeshTwoT , setHArzeshTwoT]=useState([]);
     const [hArzeshThreeT , setHArzeshThreeT]=useState([]);
     const [hArzeshFourT , setHArzeshFourT]=useState([]);
+
+    // clientseries-----------------------------------------------
+    const [enterMoney , setEnterMoney]=useState([]);
 
     // visibility states-----------------------------------------------
     const [showOrder , setShowOrder]=useState(true);
@@ -242,6 +246,21 @@ const SotckPanel=()=>{
         }
     }
 
+    const getEnterMoney=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + `/vorudpul?id=${stockData._id}`);
+            response.data.time.map((data,index)=>{
+                enterMoney.push([data,response.data.data[index]]);
+            })
+            setEnterMoney(enterMoney.map((data)=>{
+                return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60),data[1]];
+            }))
+        }catch(err){
+            dispatch(setClientType(null));
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         clientTypeReq();
         stockOhlcReq();
@@ -249,6 +268,7 @@ const SotckPanel=()=>{
         clientseriesReq();
         getStockSignal();
         getStockSarane();
+        getEnterMoney();
     },[])
 
     return(
@@ -593,6 +613,16 @@ const SotckPanel=()=>{
                             </div>
                         </div>
                     }
+                        <div className="stock-panel-extra-section" style={{width:"98.5%"}}>
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار ورود پول</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body">
+                                <EnterMoneyChart
+                                    enterMoney={enterMoney}
+                                />
+                            </div>
+                        </div>
                 </div>
             </div>
         </div>

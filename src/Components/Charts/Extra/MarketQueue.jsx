@@ -1,17 +1,16 @@
 import React from 'react';
 import ReactApexChart from 'react-apexcharts';
-import FormatNumber from "../../../Helper/FormatNumber";
 
 
-const ArzeshChart=({arzeshBuy,arzeshSale})=>{
+const MarketQueue=({buyQueue,saleQueue})=>{
         const series= [
             {
-                name: "ارزش صف های خرید",
-                data: arzeshBuy
+                name: "تعداد صف های خرید",
+                data: buyQueue
             },
             {
-                name: "ارزش صف های فروش",
-                data: arzeshSale
+                name: "تعداد صف های فروش",
+                data: saleQueue
             }
         ];
         const options= {
@@ -22,10 +21,10 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
           dataLabels: {
             enabled: false
           },
+          colors:['#0022ff','#ff0019'],
           stroke: {
             curve: 'smooth'
           },
-          colors:['#0022ff','#ff0019'],
           xaxis: {
             type: 'dataTime',
             labels: {
@@ -51,18 +50,6 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
             labels: {
                 show: true,
                 align: 'center',
-            formatter:function(num) {
-              num = Math.abs(Number(num))
-              const billions = num/1.0e+9
-              const millions = num/1.0e+6
-                return num >= 1.0e+9 && billions >= 100  ? Math.round(billions)  + "B"
-                   : num >= 1.0e+9 && billions >= 10   ? billions.toFixed(1)   + "B"
-                   : num >= 1.0e+9                     ? billions.toFixed(2)   + "B"
-                   : num >= 1.0e+6 && millions >= 100  ? Math.round(millions)  + "M"
-                   : num >= 1.0e+6 && millions >= 10   ? millions.toFixed(1)   + "M"
-                   : num >= 1.0e+6                     ? millions.toFixed(2)   + "M"
-                   : num.toFixed(2)
-            }
               },
           },
         };
@@ -70,9 +57,9 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
 
     return(
         <div className="charts-card">
-            <div className="charts-card-header">نمودار ارزش بازار</div>
+            <div className="charts-card-header">نمودار تغییرات تعداد صف ها</div>
             <ReactApexChart options={options} series={series} type="line" height={250} width={800} />
         </div>
     )
 }
-export default ArzeshChart;
+export default MarketQueue;
