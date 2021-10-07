@@ -2,29 +2,58 @@ import React from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 
-const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
+const MarketExcite=({exOne,exTwo,exThree,exFour,exFive,exSix,exSeven,exEight,exNine,exTen})=>{
         const series= [
             {
-                name: 'بیشتر از 3 درصد منفی',
-                data: DataOne
+                name:"1",
+                // name: 'بیشتر از 3 درصد منفی',
+                data: exOne
             },
             {
-                name: 'بین 0.5 تا 3 درصد منفی',
-                data: DataTwo
+                name:"2",
+                // name: 'بین 0.5 تا 3 درصد منفی',
+                data: exTwo
             },
             {
-                name: 'بین منفی 0.5 تا مثبت 0.5',
-                data: DataThree
+                name:"3",
+                // name: 'بین منفی 0.5 تا مثبت 0.5',
+                data: exThree
             },
             {
-                name: 'بین 0.5 تا 3 درصد مثبت',
-                data: DataFour
+                name:"4",
+                // name: 'بین 0.5 تا 3 درصد مثبت',
+                data: exFour
             },
             {
-                name: 'بیش از 3 درصد مثبت',
-                data: DataFive
+                name:"5",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exFive
             },
-
+            {
+                name:"6",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exSix
+            },
+            {
+                name:"7",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exSeven
+            },
+            {
+                name:"8",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exEight
+            },
+            {
+                name:"9",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exNine
+            },
+            {
+                name:"10",
+                // name: 'بیش از 3 درصد مثبت',
+                data: exTen
+            },
         ];
         const options= {
           chart: {
@@ -38,7 +67,7 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
               }
             },
           },
-          colors: ['#fc0307', '#fc8b8b', '#bedbad', '#00bd2b', '#45ff6f'],
+          colors: ['#00631b', '#00a12b', '#00d93a', '#1cff59', '#b2bf7e', '#ff5959', '#ff1c1c', '#ff0000', '#d60000', '#960000',],
           dataLabels: {
             enabled: false
           },
@@ -54,6 +83,12 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
           },
           legend: {
             show:'false',
+            markers:{
+                width:0
+            },
+            labels:{
+                colors:'white'
+            },
             position: 'bottom',
             horizontalAlign: 'center'
           },
@@ -86,14 +121,17 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
                 align: 'center',
             }
           },
+            tooltip:{
+                enabled:false
+            },
         };
       
 
     return(
         <div className="charts-card">
-            <div className="charts-card-header">نمودار وضعیت بازار</div>
+            <div className="charts-card-header">نمودار هیجان بازار</div>
             <ReactApexChart options={options} series={series} type="area" height={300} width={1250} />
         </div>
     )
 }
-export default MarketArray;
+export default MarketExcite;
