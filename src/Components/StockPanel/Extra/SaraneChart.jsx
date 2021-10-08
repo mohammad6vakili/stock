@@ -1,5 +1,7 @@
 import React from 'react';
-import Chart from 'react-apexcharts'
+import Chart from 'react-apexcharts';
+import * as moment from 'jalali-moment';
+
 
 const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
     const series = [
@@ -29,7 +31,9 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
           colors: ['transparent']
         },
         xaxis: {
-          categories: saraneDate,
+          categories: saraneDate.map((data)=>{
+            return moment(data.toString()).locale('fa').format('YYYY/M/D')
+          }),
         },
         yaxis: {
           show: true,

@@ -67,6 +67,7 @@ const SotckPanel=()=>{
     const [showStockChart,setShowStockChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
     const [showSaraneChartT , setShowSaraneChartT]=useState(true);
+    const [showEnterMoney , setShowEnterMoney]=useState(true);
     const [ohlcStatus , setOhlcStatus]=useState(false);
     const [saraneStatus , setSaraneStatus]=useState(false);
     const [saraneStatusT , setSaraneStatusT]=useState(false);
@@ -94,9 +95,6 @@ const SotckPanel=()=>{
             dispatch(setStockOhlc(response.data));
             setCloseData(response.data.close.slice(response.data.close.length-chartPeriod - response.data.close.length));
             setOhlcDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
-            setOhlcDate(ohlcDate.map((date)=>{
-                return moment(date.toString()).locale('fa').format('YYYY/M/D')
-            }))
             await response.data.date.map((date,index)=>{
                 data.push({x:[moment(date.toString()).locale('fa').format('YYYY/M/D')],y:[]});
             })
@@ -134,9 +132,6 @@ const SotckPanel=()=>{
         try{
             const response=await axios.get(Env.baseURL + `/hhistory?id=${stockData._id}`);
             setSaraneDate(response.data.date.slice(response.data.date.length-chartPeriod - response.data.date.length));
-            setSaraneDate(saraneDate.map((date)=>{
-                return moment(date.toString()).locale('fa').format('YYYY/M/D')
-            }))
             abHa = response.data.abHa.slice(response.data.abHa.length-chartPeriod - response.data.abHa.length);
             asHa = response.data.asHa.slice(response.data.asHa.length-chartPeriod - response.data.asHa.length);
             abHu = response.data.abHu.slice(response.data.abHu.length-chartPeriod - response.data.abHu.length);
@@ -280,6 +275,7 @@ const SotckPanel=()=>{
 
     return(
         <div className="stock-panel-wrapper">
+            <button onClick={()=>console.log(saraneDate)}>click</button>
             <div className="stock-panel">
                 <div className="stock-panel-header">
                     <div>{stockData.Name} ({stockData.Namad})</div>
@@ -312,6 +308,12 @@ const SotckPanel=()=>{
                             <div onClick={()=>setShowSaraneChartT(!showSaraneChartT)}>
                                 <span style={{textAlign:"center"}}>سرانه(طول روز)</span>
                                 {showSaraneChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowEnterMoney(!showEnterMoney)}>
+                                <span style={{textAlign:"center"}}>ورود پول</span>
+                                {showEnterMoney===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
                             </div>
                         </div>
                     </div>
@@ -620,6 +622,7 @@ const SotckPanel=()=>{
                             </div>
                         </div>
                     }
+                    {showEnterMoney===true &&
                         <div className="stock-panel-extra-section" style={{width:"98.5%"}}>
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار ورود پول</span>
@@ -630,6 +633,7 @@ const SotckPanel=()=>{
                                 />
                             </div>
                         </div>
+                    }
                 </div>
             </div>
         </div>

@@ -1,5 +1,7 @@
 import React from 'react';
-import Chart from 'react-apexcharts'
+import Chart from 'react-apexcharts';
+import * as moment from 'jalali-moment';
+
 
 const OhlcChartTwo=({closeData,ohlcDate})=>{
     const series = [{
@@ -17,7 +19,9 @@ const OhlcChartTwo=({closeData,ohlcDate})=>{
         },
         xaxis: {
           type: 'category',
-          categories: ohlcDate,
+          categories: ohlcDate.map((data)=>{
+            return moment(data.toString()).locale('fa').format('YYYY/M/D')
+          }),
         },
         yaxis: {
           show: true,

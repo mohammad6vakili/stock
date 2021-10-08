@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import "./Signals.css";
 import axios from 'axios';
 import Env from "../../Constant/Env.json";
@@ -6,13 +6,17 @@ import { useSelector , useDispatch } from 'react-redux';
 import {setSignals} from "../../Store/Action";
 import {AgGridColumn, AgGridReact} from 'ag-grid-react';
 import { toast } from 'react-toastify';
-import { Spin } from 'antd';
+import { Spin , Modal} from 'antd';
 
 
 const Signals =()=>{
     const dispatch=useDispatch();
+    const [rowData , setRowData]=useState([]);
+    const [modal , setModal]=useState(false);
+    const [modalVal , setModalVal]=useState(null);
     const signals=useSelector(state=>state.Reducer.signals);
     const marketData=useSelector(state=>state.Reducer.marketData);
+    // const stockData=useSelector(state=>state.Reducer.stockData);
     const getSignalsData=async()=>{
         try{
             const response=await axios.get(Env.baseURL + "/signal");
@@ -75,12 +79,53 @@ const Signals =()=>{
         }
     }
 
+    const getTodaySignal=async()=>{
+        try{
+            const response=await axios.get(Env.baseURL + "/todaysignal");
+            response.data.data.map((data)=>{
+                rowData.push({time:data._id,signalLength:Object.keys(data).length-1,namads:Object.keys(data).filter((data)=>data !== "_id")});
+            });
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
+    const getSelectedRowData=(val)=>{
+        setModalVal(val.data);
+        console.log(val.data);
+        setModal(true);
+    }
+
     useEffect(()=>{
         getSignalsData();
+        getTodaySignal();
     },[])
 
     return(
         <div className="signals">
+            {modalVal &&
+            <Modal 
+                className="search-stock-modal" 
+                title={"سیگنال های " + modalVal.time} 
+                visible={modal} 
+                onOk={()=>setModal(false)} 
+                onCancel={()=>setModal(false)}
+                footer={[]}
+            >
+                {modalVal.namads.map((val)=>(
+                    <div>
+                        {marketData.map((market)=>{
+                            if(market._id === val){
+                                return market.Namad
+                            }
+                        })}
+                    </div>
+                ))}                    
+            </Modal>
+            }
             {!signals ? <Spin size="large" />  :
                 <div
                     className="ag-theme-alpine"
@@ -127,15 +172,14 @@ const Signals =()=>{
                                     },
                                 },
                                 }}
-                                rowData={signals}
-                                // onRowClicked={(val)=>getSelectedRowData(val)}
+                                rowData={rowData}
+                                onRowClicked={(val)=>getSelectedRowData(val)}
                                 // onRowDoubleClicked={(val)=>getStockDataHandler(val)}
                                 rowStyle={{cursor:"pointer"}}
                             >
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={100} rowDrag={true} headerName="زمان" field="time"/>
-                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={80} headerName="نماد" field="namad"/>
-                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={200} headerName="نام" field="name"/>
-                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={60} headerName="قیمت" field="price" type="numberColumn"/>
+                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}}  width={140} headerName="تعداد سهام سیگنال شده" field="signalLength"/>
+                                {/* <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={60} headerName="قیمت" field="price" type="numberColumn"/>
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={110} headerName="سرانه خرید حقیقی" field="S_bHa" type="numberColumn"/>
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={110} headerName="سرانه خرید حقوقی" field="S_bHu" type="numberColumn"/>
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={115} headerName="سرانه فروش حقیقی" field="S_sHa" type="numberColumn"/>
@@ -147,7 +191,7 @@ const Signals =()=>{
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={140} headerName="سرانه دلاری فروش حقیقی" field="USD_S_sHa" type="numberColumn"/>
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={140} headerName="سرانه دلاری فروش حقوقی" field="USD_S_sHu" type="numberColumn"/>
                                 <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={140} headerName="سرانه دلاری خرید کل بازار" field="USD_SaraneB" type="numberColumn"/>
-                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={145} headerName="سرانه دلاری فروش کل بازار" field="USD_SaraneS" type="numberColumn"/>
+                                <AgGridColumn cellStyle={{border:"1px solid rgba(197, 197, 197, 0.521)",textAlign:"center"}} width={145} headerName="سرانه دلاری فروش کل بازار" field="USD_SaraneS" type="numberColumn"/> */}
                             </AgGridReact>
                 </div>
             }
