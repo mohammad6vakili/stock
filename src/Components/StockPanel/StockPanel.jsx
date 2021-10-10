@@ -4,7 +4,7 @@ import { useSelector , useDispatch} from 'react-redux';
 import FormatNumber from "../../Helper/FormatNumber";
 import axios from 'axios';
 import * as moment from 'jalali-moment';
-import { setClientType,setStockOhlc, setStockSignal} from '../../Store/Action';
+import { setClientType,setStockData,setStockOhlc, setStockSignal} from '../../Store/Action';
 import Env from "../../Constant/Env.json";
 import { toast } from 'react-toastify';
 import OrderListTable from './Extra/OrderListTable';

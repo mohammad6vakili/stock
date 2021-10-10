@@ -49,6 +49,7 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
           },
           xaxis: {
             categories: saraneDateT,
+            tickPlacement: 'on',
             labels: {
                 offsetX: -2,
                 offsetY: 25,

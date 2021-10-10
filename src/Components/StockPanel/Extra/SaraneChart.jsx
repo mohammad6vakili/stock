@@ -34,6 +34,7 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
           categories: saraneDate.map((data)=>{
             return moment(data.toString()).locale('fa').format('YYYY/M/D')
           }),
+          tickPlacement: 'on'
         },
         yaxis: {
           show: true,

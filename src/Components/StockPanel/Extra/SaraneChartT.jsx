@@ -30,6 +30,7 @@ const SaraneChartT=({saraneDateT,saraneOneT,saraneTwoT,saraneThreeT,saraneFourT}
         },
         xaxis: {
           categories: saraneDateT,
+          tickPlacement: 'on',
           labels: {
             offsetX: -2,
             offsetY: 30,
