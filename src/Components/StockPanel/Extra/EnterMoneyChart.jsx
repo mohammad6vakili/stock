@@ -1,9 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import "../StockPanel.css";
 import ReactApexChart from 'react-apexcharts';
 
 const EnterMoneyChart=({enterMoney})=>{
-
+    const [zOut , setZOut]=useState(true);
     const series= [
         {
             name: "ارزش صف های خرید",
@@ -14,10 +14,37 @@ const EnterMoneyChart=({enterMoney})=>{
       chart: {
         type: 'line',
         height: 300,
-      dataLabels: {
-        enabled: false
-      },
-
+        dataLabels: {
+          enabled: false
+        },
+        events: {
+          selection: function (chart, e) {
+            console.log(new Date(e.xaxis.min))
+          },
+          beforeZoom : (e, {xaxis}) => {
+            if(xaxis.min <20000){
+              setZOut(false)
+            }else if(xaxis.min > 20000){
+              setZOut(true)
+            }
+          }
+        },
+        toolbar: {
+          tools: {
+            zoomout: zOut,
+          },
+          export: {
+            csv: {
+              filename: "Etemadi",
+            },
+            svg: {
+              filename: "Etemadi",
+            },
+            png: {
+              filename: "Etemadi",
+            }
+          },
+        },
     },
       stroke: {
         curve: 'smooth'
@@ -45,6 +72,11 @@ const EnterMoneyChart=({enterMoney})=>{
         },
       yaxis: {
         show: true,
+        title: {
+          text: "Etemadi",
+          offsetY:0,
+          offsetX:0,
+        },
         labels: {
             show: true,
             align: 'center',

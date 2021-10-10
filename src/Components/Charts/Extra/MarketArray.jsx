@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 
 const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
-        const series= [
+      const [zOut , setZOut]=useState(true);
+      const series= [
             {
                 name: 'بیشتر از 3 درصد منفی',
                 data: DataOne
@@ -35,7 +36,30 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
             events: {
               selection: function (chart, e) {
                 console.log(new Date(e.xaxis.min))
+              },
+              beforeZoom : (e, {xaxis}) => {
+                if(xaxis.min <20000){
+                  setZOut(false)
+                }else if(xaxis.min > 20000){
+                  setZOut(true)
+                }
               }
+            },
+            toolbar: {
+              tools: {
+                zoomout: zOut,
+              },
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
             },
           },
           colors: ['#fc0307', '#fc8b8b', '#bedbad', '#00bd2b', '#45ff6f'],
@@ -53,9 +77,12 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
             }
           },
           legend: {
-            show:'false',
             position: 'bottom',
-            horizontalAlign: 'center'
+            horizontalAlign: 'center',
+            itemMargin: {
+            horizontal: 5,
+            vertical:20
+            }
           },
           xaxis: {
             type: 'dataTime',
@@ -64,7 +91,7 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
                 align: 0,
                 rotate:-90,
                 offsetX: 0,
-                offsetY: 25,
+                offsetY: 27,
                 formatter: function(secs){
                     var sec_num = parseInt(secs, 10)
                     var hours   = Math.floor(sec_num / 3600)
@@ -79,6 +106,11 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
             },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             min:0,
             max:660,
             labels: {
@@ -92,7 +124,7 @@ const MarketArray=({DataOne,DataTwo,DataThree,DataFour,DataFive})=>{
     return(
         <div className="charts-card">
             <div className="charts-card-header">نمودار وضعیت بازار</div>
-            <ReactApexChart options={options} series={series} type="area" height={250} width={800} />
+            <ReactApexChart options={options} series={series} type="area" height={300} width={800} />
         </div>
     )
 }

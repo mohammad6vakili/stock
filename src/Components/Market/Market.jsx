@@ -3,9 +3,11 @@ import "./Market.css";
 import FormatNumber from "../../Helper/FormatNumber";
 import {AgGridColumn, AgGridReact} from 'ag-grid-react';
 import { useDispatch , useSelector} from 'react-redux';
-import { setMarketData , setSidePanel, setStockData} from '../../Store/Action';
+import { setSidePanel, setStockData} from '../../Store/Action';
 import { Spin } from 'antd';
 import { useHistory } from 'react-router';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 
 const MarketTablo=()=>{
@@ -17,12 +19,34 @@ const MarketTablo=()=>{
 
     const getSelectedRowData = (val) => {
         dispatch(setSidePanel((val.data)));
+        console.log(val.data);
     }
     const getStockDataHandler=(val)=>{
         dispatch(setStockData(val.data));
         history.push("/stock-panel");
-    } 
-    
+    }
+
+    const onRemoveSelected = () => {
+        setTableData(tableData.filter((data)=>{
+            return data._id !== sidePanel._id
+        }))
+        dispatch(setSidePanel(null));
+    };
+
+    const excelExport=async()=>{
+        try{
+            const response = await axios.get("http://45.159.113.106:5000/csv?name=market");
+            toast.success("با موفقیت دانلود شد",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });            
+        }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
+            console.log(err);
+        }
+    }
+
     useEffect(()=>{
         setTableData(marketData);
         if(tableData){
@@ -42,7 +66,7 @@ const MarketTablo=()=>{
                 >
                               <AgGridReact
                                 enableRtl={true}
-                                rowSelection={'single'}
+                                rowSelection={'multiple'}
                                 rowDragManaged={true}
                                 defaultColDef={{
                                     // editable: true,
@@ -243,6 +267,7 @@ const MarketTablo=()=>{
                                     </table>
                                 </div>
                             </div>
+                          <button style={{marginTop:"10px"}} onClick={() => onRemoveSelected()}>حذف نماد از جدول</button>
                         </div>
                     :    
                         <div>نماد مورد نظر را انتخاب کنید</div>

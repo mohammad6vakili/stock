@@ -11,7 +11,20 @@ const SaraneChartT=({saraneDateT,saraneOneT,saraneTwoT,saraneThreeT,saraneFourT}
     const options= {
         chart: {
           type: 'bar',
-          height: 350
+          height: 350,
+          toolbar: {
+            export: {
+              csv: {
+                filename: "Etemadi",
+              },
+              svg: {
+                filename: "Etemadi",
+              },
+              png: {
+                filename: "Etemadi",
+              }
+            },
+          },
         },
         plotOptions: {
           bar: {
@@ -33,15 +46,20 @@ const SaraneChartT=({saraneDateT,saraneOneT,saraneTwoT,saraneThreeT,saraneFourT}
           tickPlacement: 'on',
           labels: {
             offsetX: -2,
-            offsetY: 30,
+            offsetY: 22,
               rotate: -90,
               style: {
                 fontSize: '11px',
               },
-        }
+        },
         },
         yaxis: {
-          show: true,
+          show: true, 
+          title: {
+            text: "Etemadi",
+            offsetY:0,
+            offsetX:0,
+          },
           labels: {
               show: true,
               align: 'center',
@@ -59,6 +77,13 @@ const SaraneChartT=({saraneDateT,saraneOneT,saraneTwoT,saraneThreeT,saraneFourT}
               }
           }
         },
+        legend: {
+          horizontalAlign: 'center',
+          itemMargin: {
+            horizontal: 5,
+            vertical:15
+        },
+        },
         fill: {
           opacity: 1
         },
@@ -73,7 +98,7 @@ const SaraneChartT=({saraneDateT,saraneOneT,saraneTwoT,saraneThreeT,saraneFourT}
 
     return(
         <>
-            <Chart options={options} series={series} type="bar" height={240} width={1150} />
+            <Chart options={options} series={series} type="bar" height={300} width={1150} />
         </>
     )
 }

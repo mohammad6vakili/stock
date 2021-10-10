@@ -1,8 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 
 const MarketExcite=({exOne,exTwo,exThree,exFour,exFive,exSix,exSeven,exEight,exNine,exTen})=>{
+        const [zOut , setZOut]=useState(true);
         const series= [
             {
                 name:"1",
@@ -64,7 +65,30 @@ const MarketExcite=({exOne,exTwo,exThree,exFour,exFive,exSix,exSeven,exEight,exN
             events: {
               selection: function (chart, e) {
                 console.log(new Date(e.xaxis.min))
+              },
+              beforeZoom : (e, {xaxis}) => {
+                if(xaxis.min <20000){
+                  setZOut(false)
+                }else if(xaxis.min > 20000){
+                  setZOut(true)
+                }
               }
+            },
+            toolbar: {
+              tools: {
+                zoomout: zOut,
+              },
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
             },
           },
           colors: ['#00631b', '#00a12b', '#00d93a', '#1cff59', '#b2bf7e', '#ff5959', '#ff1c1c', '#ff0000', '#d60000', '#960000',],
@@ -114,6 +138,11 @@ const MarketExcite=({exOne,exTwo,exThree,exFour,exFive,exSix,exSeven,exEight,exN
             },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             min:0,
             max:660,
             labels: {
@@ -130,7 +159,7 @@ const MarketExcite=({exOne,exTwo,exThree,exFour,exFive,exSix,exSeven,exEight,exN
     return(
         <div className="charts-card">
             <div className="charts-card-header">نمودار هیجان بازار</div>
-            <ReactApexChart options={options} series={series} type="area" height={250} width={800} />
+            <ReactApexChart options={options} series={series} type="area" height={300} width={800} />
         </div>
     )
 }

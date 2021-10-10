@@ -24,7 +24,17 @@ const SaraneChartTwo=({saraneDate,hArzeshOne,hArzeshTwo,hArzeshThree,hArzeshFour
             height: 350,
             stacked: true,
             toolbar: {
-              show: true
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
             },
             zoom: {
               enabled: true
@@ -57,6 +67,11 @@ const SaraneChartTwo=({saraneDate,hArzeshOne,hArzeshTwo,hArzeshThree,hArzeshFour
           },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             labels: {
                 show: true,
                 align: 'center',

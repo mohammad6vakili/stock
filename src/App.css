@@ -6,7 +6,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-  font-family: iranSans;
+  font-family: iranSans !important;
 }
 .app {
   width: 100%;
@@ -48,7 +48,7 @@
   background-color: rgba(255, 255, 255, 0.774) !important;
   margin-bottom: 0.65px !important;
 }
-.apexcharts-title-text{
+.apexcharts-title-text ,  .apexcharts-yaxis-title-text{
   display: none !important;
 }
 .apexcharts-legend-marker,.apexcharts-tooltip-marker{

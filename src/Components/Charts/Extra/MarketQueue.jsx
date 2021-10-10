@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import ReactApexChart from 'react-apexcharts';
 import { ConfigProvider } from 'antd';
 import 'moment/locale/fa';
@@ -7,6 +7,7 @@ import fa_IR from "antd/lib/locale/fa_IR";
 
 
 const MarketQueue=({buyQueue,saleQueue,getMarketQueue,setSaleQueue,setBuyQueue})=>{
+        const [zOut , setZOut]=useState(true);
         const series= [
             {
                 name: "تعداد صف های خرید",
@@ -21,9 +22,45 @@ const MarketQueue=({buyQueue,saleQueue,getMarketQueue,setSaleQueue,setBuyQueue})
           chart: {
             type: 'line',
             height: 300,
+            events: {
+              selection: function (chart, e) {
+                console.log(new Date(e.xaxis.min))
+              },
+              beforeZoom : (e, {xaxis}) => {
+                if(xaxis.min <20000){
+                  setZOut(false)
+                }else if(xaxis.min > 20000){
+                  setZOut(true)
+                }
+              }
+            },
+            toolbar: {
+              tools: {
+                zoomout: zOut,
+              },
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
+            },
           },
           dataLabels: {
             enabled: false
+          },
+          legend: {
+            position: 'bottom',
+            horizontalAlign: 'center',
+            itemMargin: {
+            horizontal: 5,
+            vertical:20
+            }
           },
           colors:['#0022ff','#ff0019'],
           stroke: {
@@ -51,6 +88,11 @@ const MarketQueue=({buyQueue,saleQueue,getMarketQueue,setSaleQueue,setBuyQueue})
             },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             labels: {
                 show: true,
                 align: 'center',
@@ -65,16 +107,8 @@ const MarketQueue=({buyQueue,saleQueue,getMarketQueue,setSaleQueue,setBuyQueue})
         <div className="charts-card">
             <div className="charts-card-header">
               <span>نمودار تغییرات تعداد صف ها</span>
-              <div style={{marginRight:"20px"}}>
-                {/* <ConfigProvider locale={fa_IR}  direction="rtl">
-                  <DatePickerJalali 
-                    style={{border:"none",width:"120px", borderBottom:"2px solid #91A0C1",borderRadius:"0"}}
-                    onChange={(value)=>getDate(value)}
-                  />
-                </ConfigProvider> */}
-              </div>
             </div>
-            <ReactApexChart options={options} series={series} type="line" height={250} width={800} />
+            <ReactApexChart options={options} series={series} type="line" height={300} width={800} />
         </div>
     )
 }

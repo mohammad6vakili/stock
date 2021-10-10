@@ -10,6 +10,7 @@ import {createStore, combineReducers, applyMiddleware} from "redux";
 import Reducer from './Store/Reducer';
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-enterprise';
 import {ToastContainer} from "react-toastify";
 
 

@@ -11,7 +11,20 @@ const OhlcChartTwo=({closeData,ohlcDate})=>{
     const options = {
         chart: {
           type: 'candlestick',
-          height: 350
+          height: 350,
+          toolbar: {
+            export: {
+              csv: {
+                filename: "Etemadi",
+              },
+              svg: {
+                filename: "Etemadi",
+              },
+              png: {
+                filename: "Etemadi",
+              }
+            },
+          },
         },
         title: {
           text: 'Chart',
@@ -25,6 +38,11 @@ const OhlcChartTwo=({closeData,ohlcDate})=>{
         },
         yaxis: {
           show: true,
+          title: {
+            text: "Etemadi",
+            offsetY:0,
+            offsetX:0,
+          },
           labels: {
               show: true,
               align: 'center',

@@ -65,12 +65,12 @@ const SotckPanel=()=>{
     const [showOrder , setShowOrder]=useState(true);
     const [showSignal , setShowSignal]=useState(true);
     const [showStockChart,setShowStockChart]=useState(true);
+    const [showCloseChart , setShowCloseChart]=useState(true);
     const [showSaraneChart , setShowSaraneChart]=useState(true);
     const [showSaraneChartT , setShowSaraneChartT]=useState(true);
+    const [showArzeshChart , setShowArzeshChart]=useState(true);
+    const [showArzeshChartT , setShowArzeshChartT]=useState(true);
     const [showEnterMoney , setShowEnterMoney]=useState(true);
-    const [ohlcStatus , setOhlcStatus]=useState(false);
-    const [saraneStatus , setSaraneStatus]=useState(false);
-    const [saraneStatusT , setSaraneStatusT]=useState(false);
 
     // global variables-----------------------------------------------
     var today = new Date();
@@ -275,7 +275,6 @@ const SotckPanel=()=>{
 
     return(
         <div className="stock-panel-wrapper">
-            <button onClick={()=>console.log(saraneDate)}>click</button>
             <div className="stock-panel">
                 <div className="stock-panel-header">
                     <div>{stockData.Name} ({stockData.Namad})</div>
@@ -294,8 +293,14 @@ const SotckPanel=()=>{
                         </div>
                         <div className="stock-panel-extra-section-controller">
                             <div onClick={()=>setShowStockChart(!showStockChart)}>
-                                <span style={{textAlign:"center"}}>نمودار</span>
+                                <span style={{textAlign:"center"}}>نمودار قیمت</span>
                                 {showStockChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowCloseChart(!showCloseChart)}>
+                                <span style={{textAlign:"center"}}>نمودار قیمت پایانی</span>
+                                {showCloseChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
                             </div>
                         </div>
                         <div className="stock-panel-extra-section-controller">
@@ -305,9 +310,21 @@ const SotckPanel=()=>{
                             </div>
                         </div>
                         <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowArzeshChart(!showArzeshChart)}>
+                                <span style={{textAlign:"center"}}>ارزش</span>
+                                {showArzeshChart===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
                             <div onClick={()=>setShowSaraneChartT(!showSaraneChartT)}>
                                 <span style={{textAlign:"center"}}>سرانه(طول روز)</span>
                                 {showSaraneChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
+                            </div>
+                        </div>
+                        <div className="stock-panel-extra-section-controller">
+                            <div onClick={()=>setShowArzeshChartT(!showArzeshChartT)}>
+                                <span style={{textAlign:"center"}}>ارزش(طول روز)</span>
+                                {showArzeshChartT===true ? <span style={{color:"green",textAlign:"center"}}>نمایش</span> : <span style={{color:"red",textAlign:"center"}}>مخفی</span>}
                             </div>
                         </div>
                         <div className="stock-panel-extra-section-controller">
@@ -324,6 +341,9 @@ const SotckPanel=()=>{
                             <div>
                                 <span>آخرین معامله</span>
                                 <span style={{direction:"ltr"}}>
+                                    <span style={((stockData.Close - stockData.Yesterday)*100/stockData.Yesterday)>0?{color:"green",marginRight:"5px"}:{color:"red",marginRight:"5px"}}>
+                                        [{((stockData.Close - stockData.Yesterday)*100/stockData.Yesterday).toFixed(1)}%]
+                                    </span>
                                     <span style={stockData.Close - stockData.Yesterday>0?{color:"green"}:{color:"red"}}>({stockData.Close - stockData.Yesterday})</span>
                                     <span style={{marginLeft:"20px"}}>{JSON.parse(stockData.Close).toLocaleString()}</span>
                                 </span>
@@ -331,6 +351,9 @@ const SotckPanel=()=>{
                             <div>
                                 <span>قیمت پایانی</span>
                                 <span style={{direction:"ltr"}}>
+                                    <span style={((stockData.Payani - stockData.Yesterday)*100/stockData.Yesterday)>0?{color:"green",marginRight:"5px"}:{color:"red",marginRight:"5px"}}>
+                                        [{((stockData.Payani - stockData.Yesterday)*100/stockData.Yesterday).toFixed(2)}%]
+                                    </span>
                                     <span style={stockData.Payani - stockData.Yesterday>0?{color:"green"}:{color:"red"}}>({stockData.Payani - stockData.Yesterday})</span>
                                     <span style={{marginLeft:"20px",fontSize:"17px",fontWeight:900}}>{JSON.parse(stockData.Payani).toLocaleString()}</span>
                                 </span>
@@ -551,29 +574,29 @@ const SotckPanel=()=>{
                     {showStockChart===true &&
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
-                                <span>نمودار {ohlcStatus===false ? <span>قیمت</span> : <span>قیمت پایانی</span>}</span>
-                                <button className="chart-change-status-btn" onClick={()=>setOhlcStatus(!ohlcStatus)}>تغییر وضعیت نمودار</button>
+                                <span>نمودار قیمت</span>
                             </div>
                             <div className="stock-panel-extra-section-body">
-                                {ohlcStatus===false 
-                                ?
                                     <OhlcChart data={data}/>
-                                :
+                            </div>
+                        </div>
+                    }
+                    {showCloseChart===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار قیمت پایانی</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body">
                                     <OhlcChartTwo closeData={closeData} ohlcDate={ohlcDate}/>
-                                }
                             </div>
                         </div>
                     }
                     {showSaraneChart===true &&
                         <div className="stock-panel-extra-section">
                             <div className="stock-panel-extra-section-header">
-                                <span>نمودار {saraneStatus===false ? <span>سرانه</span> : <span>ارزش</span>}</span>
-                                <div>
-                                    <button className="chart-change-status-btn" onClick={()=>setSaraneStatus(!saraneStatus)}>تغییر وضعیت نمودار</button>
-                                </div>
+                                <span>نمودار سرانه</span>
                             </div>
                             <div className="stock-panel-extra-section-body">
-                                {saraneStatus===false ?
                                     <SaraneChart 
                                         saraneDate={saraneDate} 
                                         saraneOne={saraneOne}
@@ -581,49 +604,66 @@ const SotckPanel=()=>{
                                         saraneThree={saraneThree}
                                         saraneFour={saraneFour}
                                     />
-                                :
-                                    <SaraneChartTwo 
+                                    {/* <SaraneChartTwo 
                                         saraneDate={saraneDate} 
                                         hArzeshOne={hArzeshOne}
                                         hArzeshTwo={hArzeshTwo}
                                         hArzeshThree={hArzeshThree}
                                         hArzeshFour={hArzeshFour}
-                                    />
-                                }
+                                    /> */}
+                            </div>
+                        </div>
+                    }
+                    {showArzeshChart===true &&
+                        <div className="stock-panel-extra-section">
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار ارزش</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body">
+                                <SaraneChartTwo 
+                                    saraneDate={saraneDate} 
+                                    hArzeshOne={hArzeshOne}
+                                    hArzeshTwo={hArzeshTwo}
+                                    hArzeshThree={hArzeshThree}
+                                    hArzeshFour={hArzeshFour}
+                                />
                             </div>
                         </div>
                     }
                     {showSaraneChartT===true &&
-                        <div className="stock-panel-extra-section" style={{width:"98.5%"}}>
+                        <div className="stock-panel-extra-section" style={{width:"100%"}}>
                             <div className="stock-panel-extra-section-header">
-                                <span>نمودار {saraneStatusT===false ? <span>سرانه</span> : <span>ارزش</span>} در طول روز</span>
-                                <div>
-                                    <button className="chart-change-status-btn" onClick={()=>setSaraneStatusT(!saraneStatusT)}>تغییر وضعیت نمودار</button>
-                                </div>
+                                <span>نمودار سرانه در طول روز</span>
                             </div>
                             <div className="stock-panel-extra-section-body">
-                                {saraneStatusT===false ?
-                                    <SaraneChartT
-                                        saraneDateT={saraneDateT} 
-                                        saraneOneT={saraneOneT}
-                                        saraneTwoT={saraneTwoT}
-                                        saraneThreeT={saraneThreeT}
-                                        saraneFourT={saraneFourT}
-                                    />
-                                :
-                                    <SaraneChartTwoT
-                                        saraneDateT={saraneDateT}
-                                        hArzeshOneT={hArzeshOneT}
-                                        hArzeshTwoT={hArzeshTwoT}
-                                        hArzeshThreeT={hArzeshThreeT}
-                                        hArzeshFourT={hArzeshFourT}
-                                    />
-                                }
+                                <SaraneChartT
+                                    saraneDateT={saraneDateT} 
+                                    saraneOneT={saraneOneT}
+                                    saraneTwoT={saraneTwoT}
+                                    saraneThreeT={saraneThreeT}
+                                    saraneFourT={saraneFourT}
+                                />
+                            </div>
+                        </div>
+                    }
+                    {showArzeshChartT===true &&
+                        <div className="stock-panel-extra-section" style={{width:"100%"}}>
+                            <div className="stock-panel-extra-section-header">
+                                <span>نمودار ارزش در طول روز</span>
+                            </div>
+                            <div className="stock-panel-extra-section-body">
+                                <SaraneChartTwoT
+                                    saraneDateT={saraneDateT}
+                                    hArzeshOneT={hArzeshOneT}
+                                    hArzeshTwoT={hArzeshTwoT}
+                                    hArzeshThreeT={hArzeshThreeT}
+                                    hArzeshFourT={hArzeshFourT}
+                                />
                             </div>
                         </div>
                     }
                     {showEnterMoney===true &&
-                        <div className="stock-panel-extra-section" style={{width:"98.5%"}}>
+                        <div className="stock-panel-extra-section" style={{width:"100%"}}>
                             <div className="stock-panel-extra-section-header">
                                 <span>نمودار ورود پول</span>
                             </div>

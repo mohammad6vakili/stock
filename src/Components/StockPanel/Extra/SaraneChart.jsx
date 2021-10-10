@@ -14,6 +14,19 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
         chart: {
           type: 'bar',
           height: 350,
+          toolbar: {
+            export: {
+              csv: {
+                filename: "Etemadi",
+              },
+              svg: {
+                filename: "Etemadi",
+              },
+              png: {
+                filename: "Etemadi",
+              }
+            },
+          },
         },
         plotOptions: {
           bar: {
@@ -38,6 +51,11 @@ const SaraneChart=({saraneDate,saraneOne,saraneTwo,saraneThree,saraneFour})=>{
         },
         yaxis: {
           show: true,
+          title: {
+            text: "Etemadi",
+            offsetY:0,
+            offsetX:0,
+          },
           labels: {
               show: true,
               align: 'center',

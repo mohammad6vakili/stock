@@ -1,5 +1,6 @@
 import React from 'react';
-import Chart from 'react-apexcharts'
+import Chart from 'react-apexcharts';
+import Images from "../../../Assets/images/background.jpg";
 
 const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzeshFourT})=>{
     const series = [
@@ -22,14 +23,24 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
             height: 350,
             stacked: true,
             toolbar: {
-              show: true
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
             },
             zoom: {
               enabled: true
             }
           },
           responsive: [{
-            breakpoint: 480,
+            breakpoint: 1300,
             options: {
               legend: {
                 position: 'bottom',
@@ -61,6 +72,11 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
           },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             labels: {
                 show: true,
                 align: 'center',
@@ -80,7 +96,11 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
           },
           legend: {
             position: 'bottom',
-            offsetY: 4
+            horizontalAlign: 'center',
+            itemMargin: {
+            horizontal: 5,
+            vertical:15
+            }
           },
           fill: {
             opacity: 1
@@ -89,7 +109,7 @@ const SaraneChartTwoT=({saraneDateT,hArzeshOneT,hArzeshTwoT,hArzeshThreeT,hArzes
 
     return(
         <>
-            <Chart options={options} series={series} type="bar" height={240} width={1150} />
+            <Chart options={options} series={series} type="bar" height={300} width={1150} />
         </>
     )
 }

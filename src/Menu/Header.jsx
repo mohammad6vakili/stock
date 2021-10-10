@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import "./Menu.css";
-import { useHistory } from 'react-router';
+import { useHistory , useLocation } from 'react-router';
 import { useDispatch , useSelector } from 'react-redux';
 import Env from "../Constant/Env.json";
 import axios from 'axios';
@@ -13,10 +13,12 @@ import searchImage from "../Assets/images/search.svg";
 import homeImage from '../Assets/images/home.svg';
 import signalImage from "../Assets/images/radio.png";
 import chartImage from "../Assets/images/insight.png";
+import downImage from "../Assets/images/download.png";
 
 
 const Header=()=>{
   const history=useHistory();
+  const location = useLocation();
   const dispatch=useDispatch();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const lastUpdate=useSelector(state=>state.Reducer.lastUpdate);
@@ -48,7 +50,6 @@ const Header=()=>{
 
     useEffect(()=>{
       lastUpdateReq();
-      console.log(new Date());
     },[]);
 
     return(
@@ -85,6 +86,16 @@ const Header=()=>{
                 >
                   <img src={signalImage} alt="signal"/>
                 </div>
+                {location.pathname==="/" &&
+                  <div
+                    data-target="tooltip"
+                    title="دانلود جدول به صورت csv"
+                  >
+                    <a href="http://45.159.113.106:5000/csv?name=market">
+                      <img style={{width:"100%"}} src={downImage} alt="download" />
+                    </a>
+                  </div>
+                }
             </div>
             <div className="header-info">
               {lastUpdate &&

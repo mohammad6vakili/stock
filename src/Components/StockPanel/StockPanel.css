@@ -7,7 +7,7 @@
   padding-top: 20px;
 }
 .stock-panel {
-  width: 90%;
+  width: 98%;
   border: 1px solid gray;
   border-radius: 6px;
   min-width: 305px;
@@ -83,11 +83,11 @@
 .stock-panel-extra {
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 .stock-panel-extra-section {
-  width: 49%;
+  width: 48%;
   background-color: white;
   margin: 0px 3px 10px 3px;
   border-radius: 6px;
@@ -156,8 +156,8 @@
   display: flex;
   flex-direction: column;
   align-content: center;
-  width: 60px;
-  padding: 3px 0;
+  width: 74px;
+  padding: 7px 0;
   box-shadow: 1px 1px 5px black;
   border-radius: 3px;
   cursor: pointer;

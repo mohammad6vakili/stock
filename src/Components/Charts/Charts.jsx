@@ -122,8 +122,8 @@ const Charts =()=>{
         try{
             const response=await axios.get(Env.baseURL + "/arzesh");
             for (let index=0;index<Object.keys(response.data).length;index++) {
-                arzeshBuy.push([Object.keys(response.data)[index],Object.values(response.data)[index][0][1]]);
-                arzeshSale.push([Object.keys(response.data)[index],Object.values(response.data)[index][1][1]]);
+                arzeshBuy.push([Object.keys(response.data)[index],Object.values(response.data)[index][1][1]]);
+                arzeshSale.push([Object.keys(response.data)[index],Object.values(response.data)[index][0][1]]);
             }
             setArzeshBuy(arzeshBuy.map((data)=>{
                 return [(parseInt(data[0].split(":")[0], 10) * 60 * 60) + (parseInt(data[0].split(":")[1], 10) * 60) + parseInt(data[0].split(":")[2], 10),data[1]];

@@ -1,9 +1,10 @@
-import React from 'react';
+import React,{useState} from 'react';
 import ReactApexChart from 'react-apexcharts';
 import FormatNumber from "../../../Helper/FormatNumber";
 
 
 const ArzeshChart=({arzeshBuy,arzeshSale})=>{
+        const [zOut , setZOut]=useState(true);
         const series= [
             {
                 name: "ارزش صف های خرید",
@@ -18,12 +19,48 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
           chart: {
             type: 'line',
             height: 300,
+            events: {
+              selection: function (chart, e) {
+                console.log(new Date(e.xaxis.min))
+              },
+              beforeZoom : (e, {xaxis}) => {
+                if(xaxis.min <20000){
+                  setZOut(false)
+                }else if(xaxis.min > 20000){
+                  setZOut(true)
+                }
+              }
+            },
+            toolbar: {
+              tools: {
+                zoomout: zOut,
+              },
+              export: {
+                csv: {
+                  filename: "Etemadi",
+                },
+                svg: {
+                  filename: "Etemadi",
+                },
+                png: {
+                  filename: "Etemadi",
+                }
+              },
+            },
           },
           dataLabels: {
             enabled: false
           },
           stroke: {
             curve: 'smooth'
+          },
+          legend: {
+            position: 'bottom',
+            horizontalAlign: 'center',
+            itemMargin: {
+            horizontal: 5,
+            vertical:20
+            }
           },
           colors:['#0022ff','#ff0019'],
           xaxis: {
@@ -48,6 +85,11 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
             },
           yaxis: {
             show: true,
+            title: {
+              text: "Etemadi",
+              offsetY:0,
+              offsetX:0,
+            },
             labels: {
                 show: true,
                 align: 'center',
@@ -71,7 +113,7 @@ const ArzeshChart=({arzeshBuy,arzeshSale})=>{
     return(
         <div className="charts-card">
             <div className="charts-card-header">نمودار ارزش بازار</div>
-            <ReactApexChart options={options} series={series} type="line" height={250} width={800} />
+            <ReactApexChart options={options} series={series} type="line" height={300} width={800} />
         </div>
     )
 }
