@@ -6,6 +6,8 @@ export const CLIENT_TYPE="CLIENT_TYPE";
 export const STOCK_OHLC="STOCK_OHLC";
 export const SIGNALS="SIGNALS";
 export const STOCK_SIGNAL="STOCK_SIGNAL";
+export const TODAY_SIGNAL="TODAY_SIGNAL";
+
 
 export const setMarketData=(data)=>{
     return(
@@ -67,6 +69,14 @@ export const setStockSignal=(data)=>{
     return(
         {
             type:STOCK_SIGNAL,
+            payload:data
+        }
+    )
+}
+export const setTodaySignal=(data)=>{
+    return(
+        {
+            type:TODAY_SIGNAL,
             payload:data
         }
     )

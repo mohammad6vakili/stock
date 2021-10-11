@@ -33,19 +33,6 @@ const MarketTablo=()=>{
         dispatch(setSidePanel(null));
     };
 
-    const excelExport=async()=>{
-        try{
-            const response = await axios.get("http://45.159.113.106:5000/csv?name=market");
-            toast.success("با موفقیت دانلود شد",{
-                position: toast.POSITION.BOTTOM_LEFT
-                });            
-        }catch(err){
-            toast.error("خطا در برقراری ارتباط",{
-                position: toast.POSITION.BOTTOM_LEFT
-                });
-            console.log(err);
-        }
-    }
 
     useEffect(()=>{
         setTableData(marketData);

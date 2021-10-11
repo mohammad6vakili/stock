@@ -7,6 +7,7 @@ import {
     STOCK_OHLC,
     SIGNALS,
     STOCK_SIGNAL,
+    TODAY_SIGNAL,
   } from "./Action";
        
   const initialState = {
@@ -17,7 +18,8 @@ import {
     clienttype:null,
     stockOhlc:null,
     signals:null,
-    stockSignal:null
+    stockSignal:null,
+    todaySignal:[]
   };
        
   const Reducer = (state = initialState, action) => {
@@ -38,6 +40,8 @@ import {
         return {...state , signals:action.payload};
       case STOCK_SIGNAL:
         return {...state , stockSignal:action.payload};
+      case TODAY_SIGNAL:
+        return {...state , todaySignal:action.payload};
       default:
     return state;
     }
