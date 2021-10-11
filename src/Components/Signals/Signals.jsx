@@ -29,17 +29,18 @@ const Signals =()=>{
         <div className="signals">
             {modalVal &&
             <Modal 
-                className="search-stock-modal" 
+                className="search-stock-modal"
                 title={"سیگنال های " + modalVal.time} 
                 visible={modal} 
                 onOk={()=>setModal(false)} 
                 onCancel={()=>setModal(false)}
                 footer={[]}
             >
-                <div className="search-stock-modal-body">
+                <div className="search-stock-modal-body" style={{flexDirection:"row"}}>
                     <div>
+                        <h2>نماد</h2>
                         {modalVal.namads.map((val)=>(
-                                <div>
+                                <div style={{marginBottom:"7px"}}>
                                     {marketData.map((market)=>{
                                         if(market._id === val){
                                             return market.Namad
@@ -49,16 +50,18 @@ const Signals =()=>{
                         ))}
                     </div>                    
                     <div>
+                        <h2>قیمت</h2>
                         {modalVal.price.map((pric)=>(
-                            <div>{pric}</div>
+                            <div style={{marginBottom:"7px"}}>{pric}</div>
                         ))}
                     </div>
                     <div>
+                        <h2>سیگنال</h2>
                         {
                             modalVal.sigs.map((signal)=>{
                                 if(typeof(signal)==="object"){
                                     for (let index=0;index<signal.length;index++) {
-                                        return <div>{signal[index]}</div>
+                                        return <div style={{marginBottom:"7px"}}>{signal[index]}</div>
                                     }
                                 }
                             })

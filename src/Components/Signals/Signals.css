@@ -7,8 +7,6 @@
 }
 .search-stock-modal-body{
     width: 100%;
-    display: flex;
-    flex-direction: row;
 }
 .search-stock-modal-body>div{
     width: 50%;

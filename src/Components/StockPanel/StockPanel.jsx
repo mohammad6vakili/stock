@@ -84,6 +84,9 @@ const SotckPanel=()=>{
             const response = await axios.get(Env.baseURL + `/clienttype?id=${stockData._id}`);
             dispatch(setClientType(response.data));
         }catch(err){
+            toast.error("خطا در برقراری ارتباط",{
+                position: toast.POSITION.BOTTOM_LEFT
+                });
             dispatch(setClientType(null));
             console.log(err);
         }
@@ -271,7 +274,22 @@ const SotckPanel=()=>{
         getStockSignal();
         getStockSarane();
         getEnterMoney();
+        const interval = setInterval(async() => {
+            try{
+                const response = await axios.get(`http://45.159.113.106:5000/market?id=${stockData._id}`);
+                dispatch(setStockData(response.data))
+            }catch(err){
+                toast.error("خطا در برقراری ارتباط",{
+                    position: toast.POSITION.BOTTOM_LEFT
+                    });
+                console.log(err);
+            }
+        }, 30000);
+        return () => {
+          clearInterval(interval);
+        };
     },[])
+
 
     return(
         <div className="stock-panel-wrapper">

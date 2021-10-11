@@ -33,6 +33,25 @@ const MarketTablo=()=>{
         dispatch(setSidePanel(null));
     };
 
+    const formatNumberCell=(val)=>{
+        return FormatNumber(val.value);
+    }
+
+    const queueFormatter=(val)=>{
+        switch (val.value) {
+            case 1:
+                return "صف خرید"
+                break;
+            case -1:
+                return "صف فروش"
+                break;
+            case 0:
+                return "بدون صف"
+                break;
+            default:
+                break;
+        }
+    } 
 
     useEffect(()=>{
         setTableData(marketData);
@@ -56,7 +75,6 @@ const MarketTablo=()=>{
                                 rowSelection={'multiple'}
                                 rowDragManaged={true}
                                 defaultColDef={{
-                                    // editable: true,
                                     sortable: true,
                                     filter: true,
                                     resizable: true,
@@ -102,7 +120,7 @@ const MarketTablo=()=>{
                                 <AgGridColumn cellClass="market-table-cell-link-hover" width={190} headerName="نام" field="Name"/>
                                 <AgGridColumn width={60} headerName="تعداد" field="Tedad" type="numberColumn"/>
                                 <AgGridColumn width={80} headerName="حجم" field="Hajm" type="numberColumn"/>
-                                <AgGridColumn width={100} headerName="ارزش" field="Arzesh" type="numberColumn"/>
+                                <AgGridColumn width={100} headerName="ارزش" valueFormatter={formatNumberCell} field="Arzesh" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="دیروز" field="Yesterday" type="numberColumn"/>
                                 {/* <AgGridColumn width={60} headerName="Clock" field="Clock" type="numberColumn"/> */}
                                 <AgGridColumn width={90} headerName="آخرین معامله" field="Close" type="numberColumn"/>
@@ -113,15 +131,14 @@ const MarketTablo=()=>{
                                 {/* <AgGridColumn width={60} headerName="Fild16" field="Fild16" type="numberColumn"/> */}
                                 {/* <AgGridColumn width={70} headerName="قیمت مجاز بالا" field="HadeMojazD" type="numberColumn"/> */}
                                 {/* <AgGridColumn width={70} headerName="قیمت مجاز پایین" field="HadeMojazU" type="numberColumn"/> */}
-                                <AgGridColumn width={80} headerName="حجم مبنا" field="HajmMabna" type="numberColumn"/>
+                                <AgGridColumn width={80} headerName="حجم مبنا" valueFormatter={formatNumberCell} field="HajmMabna" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="بیشترین " field="High" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="کمترین" field="Low" type="numberColumn"/>
                                 <AgGridColumn width={90} headerName="اولین معامله" field="Open" type="numberColumn"/>
                                 <AgGridColumn width={70} headerName="پایانی" field="Payani" type="numberColumn"/>
-                                {/* <AgGridColumn width={90} headerName="تعداد سهم" field="TedadSaham" type="numberColumn"/> */}
+                                <AgGridColumn width={90} headerName="تعداد سهم" field="TedadSaham" valueFormatter={formatNumberCell} type="numberColumn"/>
                                 {/* <AgGridColumn width={65} headerName="branch" field="branch" type="numberColumn"/> */}
-                                {/* <AgGridColumn width={90} headerName="وضعیت صف" field="queue" type="numberColumn"/> */}
-                                {/* queue ==> 1:kharid , -1:forosh , 0:no queue*/}
+                                <AgGridColumn width={90} headerName="وضعیت صف" field="queue" valueFormatter={queueFormatter} type="numberColumn"/>
                             </AgGridReact>
                 </div>
                 <div className="market-mini-panel-wrapper">
